@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* モノトーン カラーパレット（無彩色徹底・彩度ゼロ） */
+  --color-ink: #0a0a0a; /* 主要テキスト・黒オブジェクト */
+  --color-bg: #f5f4f2; /* ベース背景（純白を避け上品に） */
+  --color-paper: #ffffff; /* カード・反転セクション */
+  --color-gray-1: #525252; /* サブテキスト */
+  --color-gray-2: #a3a3a3; /* キャプション・罫線 */
+  --color-gray-3: #e5e5e5; /* 区切り・面の差 */
+
+  /* 反転セクション用エイリアス */
+  --color-background: #f5f4f2;
+  --color-foreground: #0a0a0a;
+
+  /* フォント */
+  --font-display: var(--font-cormorant), "Cormorant Garamond", serif; /* 英字大見出し */
+  --font-heading: var(--font-noto-serif), "Noto Serif JP", serif; /* 和文見出し */
+  --font-body: var(--font-noto-sans), "Noto Sans JP", sans-serif; /* 本文 */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+
+/* テキスト選択色（無彩色） */
+::selection {
+  background-color: #0a0a0a;
+  color: #f5f4f2;
+}
+
+/* スクロールバー非表示（横カルーセル用） */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* フィルムグレイン／ノイズオーバーレイ */
+.bg-noise {
+  position: relative;
+}
+.bg-noise::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Ken Burns: 動画内部の継続 push-in（奥行きのある映像感） */
+@keyframes kenburns {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.16);
+  }
+}
+.kenburns {
+  animation: kenburns 16s ease-in-out infinite alternate;
+}
+
+/* prefers-reduced-motion: 演出を抑制 */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .kenburns {
+    animation: none;
+  }
+}

@@ -6,6 +6,7 @@ export type ScrollMotion =
   | "pinned-horizontal" // 横スクロール・ピン留め
   | "diagonal-reveal" // 斜めスライドリビール
   | "vertical-sticky" // 縦グリッド + スティッキー
+  | "annotated" // 注釈ダイアグラム（三首）
   | "pinned-diagonal" // 斜めピン留めスクロール + 奥行き
   | "portal-depth" // 枠→動画フルスクリーンの奥行き portal（章間インタールード）
   | "minimal-reveal"; // テキスト主体ミニマル出現
@@ -69,8 +70,15 @@ export const chapters: Chapter[] = [
     motion: "depth-scrub",
   },
   {
-    id: "lookbook",
+    id: "iroke",
     no: "05",
+    titleEn: "The Art of Negative Space",
+    titleJa: "抜け感という色気",
+    motion: "annotated",
+  },
+  {
+    id: "lookbook",
+    no: "06",
     titleEn: "Lookbook",
     titleJa: "ルックブック",
     motion: "vertical-sticky",

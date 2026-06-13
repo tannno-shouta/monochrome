@@ -66,6 +66,8 @@ public/
 | `public/images/silhouette-poster.jpg` | 同ポスター |
 | `public/videos/interlude.mp4` | 章間 portal インタールード動画（autoplay loop・push-in撮影推奨） |
 | `public/images/interlude-poster.jpg` | 同ポスター（reduced-motion時） |
+| `public/videos/texture.mp4` | Chapter 03 背景動画（LIDNM風アイテムラック・autoplay loop） |
+| `public/images/texture-poster.jpg` | 同ポスター（reduced-motion時） |
 | `public/images/why.jpg` `texture-*.jpg` `look-*.jpg` | 各章スチル |
 
 ### スクラブ動画のエンコード要件（重要）

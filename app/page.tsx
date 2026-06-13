@@ -7,6 +7,7 @@ import { PortalInterlude } from "@/components/scroll/PortalInterlude";
 import { ChapterTexture } from "@/components/chapters/ChapterTexture";
 import { ChapterVariations } from "@/components/chapters/ChapterVariations";
 import { ChapterSilhouette } from "@/components/chapters/ChapterSilhouette";
+import { ChapterIroke } from "@/components/chapters/ChapterIroke";
 import { ChapterLookbook } from "@/components/chapters/ChapterLookbook";
 import { Closing } from "@/components/chapters/Closing";
 
@@ -29,6 +30,7 @@ export default function Home() {
         <ChapterTexture />
         <ChapterVariations />
         <ChapterSilhouette />
+        <ChapterIroke />
         <ChapterLookbook />
         <Closing />
       </main>

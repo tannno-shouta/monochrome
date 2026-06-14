@@ -60,7 +60,61 @@ Interlude は autoplay ループ＝始端と終端が繋がる push-in が理想
 
 ---
 
-## 画像→動画（image-to-video）運用【採用ルート＝本人の実写を動かす】
+## ⓪ モデルアンカー作成【最初にやる・採用】
+
+全カットで人物を揃えるため、まず**基準となる1枚（モデルアンカー）**を固める。以降のシーンは全部これを `@ModelAnchor` として参照して生成する。
+
+> 加藤コウキ本人の実写を**参照画像**として TapNow に入れて生成 → 一番本人に近い1枚を選んで確定 → それを唯一の基準にする（以後オリジナル写真ではなくアンカーを使い回すと一貫性が出る）。※AI生成のため本人と微差は出る（一貫性を優先する判断）。
+>
+> **参照は複数入れるのが正解**：①顔の接写（顔・髪・髭・シルバーアクセの同一性ロック用）＋②全身〜3/4写真（体型・着丈・ドレープ・足元の比率用）。この2枚を参照に**全身アンカー(3:4)**を生成する。顔接写だけだと体型がブレやすい。
+
+### ⓪-1 アンカー立ち絵（全身・Recraft V4 / MJ V7・本人写真を参照入力）
+参照2枚を入れる：①顔の接写（同一性）＋②全身写真（体型・比率）。
+```
+Full-length photorealistic editorial fashion photograph of a 33-year-old Japanese male model,
+181cm slim model physique, standing relaxed, head-to-toe fully in frame.
+[Reference image 1 = the face close-up for identity; Reference image 2 = the full-body photo for build/proportions.]
+Face: sharp defined jawline, olive skin, calm confident mature expression, light neat moustache and soul-patch stubble.
+Hair: dark brown-black medium-length centre-parted, swept back with textured strands over the forehead,
+tapered short sides, wet-look styling.
+Outfit: all-monochrome mode tailoring — a black drape tailored jacket worn open over a black tee,
+black wide-leg trousers, minimal black leather shoes.
+Accessories (ALL SILVER): a silver hoop earring, a thin silver chain necklace, a silver bracelet,
+and silver rings on the fingers.
+No sunglasses (eyes visible to lock identity).
+Color palette: pure monochrome (black, charcoal, white).
+Background: clean seamless light-grey studio.
+Shot on 50mm lens, full-length framing, soft diffused studio light, shallow depth of field, fine 35mm film grain.
+natural realistic skin texture with pores, candid editorial photography, real fabric detail,
+not 3D render, not illustration, not anime, no plastic skin.
+Aspect ratio: 3:4.
+```
+→ 数枚生成し、**最も本人に近い1枚を選んで「ModelAnchor」として保存**（キャンバスにノード化）。
+
+### ⓪-2 キャラシート化（任意・再利用性UP）
+```
+@ModelAnchor
+A clean minimalist character reference sheet of the same male model, pure white background.
+Include: a 3-direction full-body turnaround (front, side, back), 4 head shots (neutral, slight smile,
+looking down, three-quarter), and detail callouts (hair, the all-silver accessories, the black outfit fabric, shoes).
+Maintain the exact same face, hairstyle, outfit and silver accessories as @ModelAnchor.
+Photorealistic, consistent soft lighting, English labels. Aspect ratio 16:9, 2K.
+```
+
+### ⓪-3 各シーンの開始フレーム生成（アンカー＋ロケ）
+動画化の前に、アンカーをロケへ“配置”した静止画を作る。例（海辺 Hero）:
+```
+@ModelAnchor
+Place this exact model (same face, hair, outfit, all-silver accessories) on a quiet overcast grey beach,
+three-quarter walking pose, flat sea horizon behind, lots of sky.
+Dark moody monochrome grade, soft overcast light, fine film grain, deep shadows. Aspect ratio 16:9.
+```
+コンクリ(Interlude)・海辺逆光(Silhouette) も同様に `@ModelAnchor + ロケ記述` で開始フレームを作る。
+→ できた開始フレームを下の **image-to-video** で動かす。
+
+---
+
+## 画像→動画（image-to-video）運用【アンカー由来の開始フレームを動かす】
 
 モデルは**加藤コウキ本人の実写**を image-to-video の元にする（顔の一貫性が最も確実。要・本人の使用許諾）。
 
@@ -166,8 +220,29 @@ Aspect ratio: 16:9.
 
 ---
 
-## ② Interlude — 地中美術館の回廊を奥へ（16:9 / 6–10s / autoplayループ・push-in）
+## ② Interlude — コンクリ回廊→服のラックへ抜ける（16:9 / 6–10s / autoplayループ・push-in）
 
+**確定方針（ストーリー接続）**: Interlude の奥を**無数のモノトーンの服のラック**にして、次章 **Texture（LIDNM風ラック背景）へ地続きで繋ぐ**。Tone→「枠をくぐる」→服の世界→Texture。両方ダーク基調で白フラッシュ等の断絶は使わない。
+- 採用パイプライン: `@ModelAnchor` →【開始フレーム生成：コンクリ回廊が奥で服のラックへ続く構図】→ image-to-video（push-in）。
+- 開始フレーム例:
+  ```
+  @ModelAnchor
+  The same model walking forward through a dark minimalist concrete space that opens into long rows of
+  hanging monochrome garments (black coats, charcoal knits, white shirts) receding into the depth,
+  faint cold light at the far end, strong one-point perspective. Full body, centered, space ahead to push into.
+  Dark moody monochrome, low-key, deep shadows, fine film grain. real photo, not 3D, not anime. 16:9.
+  ```
+- i2v 動き:
+  ```
+  Animate the attached image. The man walks slowly forward, deeper between the rows of hanging garments.
+  Camera: continuous push-in following him into the corridor of clothes toward the far light, seamless loop.
+  Dark moody monochrome, low-key, volumetric haze, fine film grain. 8s slow. 16:9.
+  Keep his face, hair, black outfit and all-silver accessories exactly as in the image.
+  ```
+
+> 旧案（安藤コンクリ回廊のみ／パリコレ会場＋白フラッシュ）は不採用。理由: 白フラッシュはループで毎回光る＆次のTexture(暗)と断絶／パリコレは静寂の世界観とズレる。
+
+### 旧・参考バリエーション（純コンクリ回廊）
 共通: 安藤忠雄の打ちっぱなしコンクリ回廊／光のスリット。枠の中へ吸い込まれる強いドリー。
 
 ### Var.1（安全）— 回廊をまっすぐ前進

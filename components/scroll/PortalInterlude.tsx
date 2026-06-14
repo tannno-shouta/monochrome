@@ -11,7 +11,7 @@ import {
 
 interface PortalInterludeProps {
   id?: string;
-  /** 動画ソース（autoplay loop muted・push-in 撮影の TapNow 素材推奨） */
+  /** 動画ソース（スクロール連動スクラブ・末尾フラッシュアウト前提の素材） */
   src: string;
   /** ポスター画像（reduced-motion 時／読込前／モバイル背景） */
   poster: string;
@@ -77,8 +77,8 @@ export function PortalInterlude({
   // 手前レイヤ全体は最後にフェード＝奥の動画（フルスクリーン）に一本化
   const frontOpacity = useTransform(scrollYProgress, [0.86, 0.96], [1, 0]);
 
-  // 章間の黒フラッシュ（吸い込み）
-  const flash = useTransform(scrollYProgress, [0, 0.12, 0.9, 1], [1, 0, 0, 1]);
+  // 入口の黒フラッシュ（吸い込み）。出口は動画末尾の白フラッシュアウトに任せる
+  const flash = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
   useEffect(() => {
     const decide = () =>
@@ -88,25 +88,55 @@ export function PortalInterlude({
     return () => window.removeEventListener("resize", decide);
   }, []);
 
-  // 画面外では動画を停止（デコード負荷を抑制）
+  // スクロール連動スクラブ: scrollYProgress を video.currentTime に写像。
+  // 末尾の白フラッシュアウトが「Interlude を抜ける瞬間」に1回だけ出る（ループ点滅しない）。
   useEffect(() => {
     if (prefersReducedMotion) return;
-    const section = ref.current;
-    if (!section) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const videos = [bgVideoRef.current, fgVideoRef.current];
-        for (const v of videos) {
-          if (!v) continue;
-          if (entry.isIntersecting) void v.play().catch(() => {});
-          else v.pause();
-        }
-      },
-      { threshold: 0 },
+    const vids = [bgVideoRef.current, fgVideoRef.current].filter(
+      (v): v is HTMLVideoElement => v != null,
     );
-    observer.observe(section);
-    return () => observer.disconnect();
-  }, [prefersReducedMotion]);
+    if (!vids.length) return;
+
+    let raf = 0;
+    let target = 0;
+    let duration = 0;
+    const onMeta = () => {
+      duration = Math.max(...vids.map((v) => v.duration || 0));
+    };
+    vids.forEach((v) => {
+      if (v.readyState >= 1) onMeta();
+      v.addEventListener("loadedmetadata", onMeta);
+    });
+
+    const tick = () => {
+      raf = 0;
+      if (duration <= 0) return;
+      let again = false;
+      for (const v of vids) {
+        const cur = v.currentTime;
+        const next = cur + (target - cur) * 0.2;
+        if (Math.abs(next - cur) > 0.01) {
+          try {
+            v.currentTime = next;
+          } catch {}
+          again = true;
+        }
+      }
+      if (again) raf = requestAnimationFrame(tick);
+    };
+
+    const unsubscribe = scrollYProgress.on("change", (p) => {
+      if (duration <= 0) return;
+      target = Math.min(Math.max(p, 0), 1) * duration;
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+
+    return () => {
+      unsubscribe();
+      if (raf) cancelAnimationFrame(raf);
+      vids.forEach((v) => v.removeEventListener("loadedmetadata", onMeta));
+    };
+  }, [prefersReducedMotion, isMobile, scrollYProgress]);
 
   if (prefersReducedMotion) {
     return (
@@ -154,11 +184,10 @@ export function PortalInterlude({
               src={src}
               poster={poster}
               muted
-              loop
-              autoPlay
               playsInline
+              preload="auto"
               aria-hidden
-              className="kenburns h-full w-full object-cover"
+              className="h-full w-full object-cover"
             />
           )}
         </motion.div>
@@ -183,12 +212,11 @@ export function PortalInterlude({
               src={src}
               poster={poster}
               muted
-              loop
-              autoPlay
               playsInline
+              preload="auto"
               aria-label={label}
               style={{ clipPath: tagClip }}
-              className="kenburns absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
 
             {/* 下げ札の意匠（輪郭・紐穴・吊り紐・ラベル）— 終盤でフェード */}

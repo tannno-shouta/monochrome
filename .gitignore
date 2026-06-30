@@ -39,3 +39,16 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# fashion reference images (copyright: do not commit)
+refs/
+
+# Claude Code working files
+.claude/
+plans/
+
+# 大きすぎる原本（jpg で運用、png は除外）
+public/images/gallery-portal.png
+
+# graded と完全に同一内容なので不要
+public/videos/gallery.mp4

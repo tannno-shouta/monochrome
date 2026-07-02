@@ -11,6 +11,7 @@ import {
 } from "framer-motion";
 import { IntroFallback } from "./IntroFallback";
 import { BlurText } from "@/components/animations/BlurText";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 // R3F 本体は ssr:false で遅延読込。3D を出すと判定した時だけ実際に import される。
 const IntroScene = dynamic(
@@ -22,7 +23,7 @@ const IntroScene = dynamic(
 function canRun3D(): boolean {
   if (typeof window === "undefined") return false;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return false;
-  if (window.matchMedia("(max-width: 767px)").matches) return false;
+  // モバイルも 3D を出す（画面幅では弾かない）。低スペック・省データ・WebGL 不可のみ除外。
 
   const nav = navigator as Navigator & {
     connection?: { saveData?: boolean };
@@ -65,6 +66,7 @@ const subscribe = () => () => {};
  */
 export function IntroPortal3D() {
   const mode = useSyncExternalStore(subscribe, getClientSnapshot, getServerSnapshot);
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
   // 縦長セクションの通過進捗 0→1（カメラ駆動の単一ソース）
@@ -96,25 +98,35 @@ export function IntroPortal3D() {
 
   // 3D Canvas の演出：冒頭は ds-k 風に「左寄せ + 傾き」 で配置し、テキストと共存。
   // スクロール開始でゆっくり真っ直ぐ画面いっぱいに戻り、既存の回廊カメラワークへ繋ぐ。
-  const canvasRotate = useTransform(scrollYProgress, [0, 0.12], [-5, 0]);
-  const canvasTranslateX = useTransform(scrollYProgress, [0, 0.12], ["-15%", "0%"]);
-  const canvasScale = useTransform(scrollYProgress, [0, 0.12], [0.85, 1]);
+  // モバイルはテキストが下部配置で「左に避ける」必要がないため、x シフトなし＋控えめな傾きに。
+  const canvasRotate = useTransform(scrollYProgress, [0, 0.12], isMobile ? [-3, 0] : [-5, 0]);
+  const canvasTranslateX = useTransform(
+    scrollYProgress,
+    [0, 0.12],
+    isMobile ? ["0%", "0%"] : ["-15%", "0%"],
+  );
+  const canvasScale = useTransform(scrollYProgress, [0, 0.12], isMobile ? [0.92, 1] : [0.85, 1]);
 
   return (
     <section ref={ref} className="relative h-[400vh] w-full bg-[#9b9b9b]">
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* 3D Canvas は画面全体。冒頭のみ CSS transform で左寄せ＋傾けて配置し、
-            スクロール開始でゆっくり真っ直ぐ画面中央へ復帰する。R3F 内部のカメラは変更しない。 */}
+            スクロール開始でゆっくり真っ直ぐ画面中央へ復帰する。R3F 内部のカメラは変更しない。
+            transform は 3D モード限定（静的フォールバックまで傾けない）。 */}
         <motion.div
-          style={{
-            rotate: canvasRotate,
-            x: canvasTranslateX,
-            scale: canvasScale,
-            transformOrigin: "center center",
-          }}
+          style={
+            mode === "3d"
+              ? {
+                  rotate: canvasRotate,
+                  x: canvasTranslateX,
+                  scale: canvasScale,
+                  transformOrigin: "center center",
+                }
+              : undefined
+          }
           className="absolute inset-0"
         >
-          {mode === "3d" && <IntroScene progress={scrollYProgress} />}
+          {mode === "3d" && <IntroScene progress={scrollYProgress} mobile={isMobile} />}
           {mode === "fallback" && <IntroFallback />}
         </motion.div>
 
@@ -142,8 +154,9 @@ export function IntroPortal3D() {
             ○ Monochrome
           </div>
 
-          {/* 大型タイトル + リード文：画面右寄り集約（縦中央）。md未満は画面下部に重ねる */}
-          <div className="absolute bottom-12 right-6 max-w-[88vw] md:bottom-auto md:right-[6vw] md:top-1/2 md:max-w-[36vw] md:-translate-y-1/2">
+          {/* 大型タイトル + リード文：画面右寄り集約（縦中央）。md未満は画面下部に重ねる
+              （bottom-24 で左下ブランドラベルとの重なりを回避） */}
+          <div className="absolute bottom-24 right-6 max-w-[88vw] md:bottom-auto md:right-[6vw] md:top-1/2 md:max-w-[36vw] md:-translate-y-1/2">
             <BlurText
               text="色を捨てた。"
               delay={120}

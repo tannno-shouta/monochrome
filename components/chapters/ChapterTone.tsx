@@ -49,7 +49,7 @@ export function ChapterTone() {
           <div
             key={p.label}
             style={{ backgroundColor: p.bg, color: p.fg }}
-            className="flex h-[70vh] w-[80vw] shrink-0 flex-col justify-between p-10 md:w-[55vw] md:p-16"
+            className="flex h-[54vh] w-[80vw] shrink-0 flex-col justify-between p-8 md:h-[70vh] md:w-[55vw] md:p-16"
           >
             <span className="font-display text-2xl tracking-[0.3em]">
               {p.label}

@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 import { ShinyText } from "@/components/animations/ShinyText";
 import { TargetCursor } from "@/components/animations/TargetCursor";
+import { useIsMobile } from "@/lib/useIsMobile";
 
 /**
  * シルエット見せ場（A/I/Y）。
@@ -56,6 +57,12 @@ type Annotation = {
   labels: AnnotationLabel[];
 };
 
+// 座標系メモ（annotations / annotationsMobile 共通）:
+// SVG は viewBox 100x100 + preserveAspectRatio="none" ＝ viewport 全面に引き伸ばし。
+// 動画(1280x720)は object-cover なので、PC(横長)は動画座標≒viewport座標だが、
+// モバイル縦画面では「動画の中央約26%幅」だけが見える＝モデルが画面幅いっぱいに拡大される。
+// そのため PC とモバイルで指し先座標を別データで持つ（モデル位置: 縦は等倍、横は中央拡大）。
+
 const LINES = [
   {
     key: "A",
@@ -81,6 +88,26 @@ const LINES = [
           {
             text: "ワイドサイズ\nのパンツ",
             textStyle: { top: "74vh", right: "21vw", textAlign: "left" as const },
+          },
+        ],
+      },
+    ] satisfies Annotation[],
+    annotationsMobile: [
+      {
+        path: "M 8 20 L 18 20 L 30 29",
+        labels: [
+          {
+            text: "ジャストサイズ\nのトップス",
+            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+          },
+        ],
+      },
+      {
+        path: "M 92 56 L 80 56 L 68 66",
+        labels: [
+          {
+            text: "ワイドサイズ\nのパンツ",
+            textStyle: { top: "48vh", right: "5vw", textAlign: "right" as const },
           },
         ],
       },
@@ -114,6 +141,26 @@ const LINES = [
         ],
       },
     ] satisfies Annotation[],
+    annotationsMobile: [
+      {
+        path: "M 8 20 L 18 20 L 28 30",
+        labels: [
+          {
+            text: "セミワイド\nのトップス",
+            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+          },
+        ],
+      },
+      {
+        path: "M 92 56 L 80 56 L 64 78",
+        labels: [
+          {
+            text: "セミワイド\nのパンツ",
+            textStyle: { top: "48vh", right: "5vw", textAlign: "right" as const },
+          },
+        ],
+      },
+    ] satisfies Annotation[],
   },
   {
     key: "Y",
@@ -143,6 +190,26 @@ const LINES = [
         ],
       },
     ] satisfies Annotation[],
+    annotationsMobile: [
+      {
+        path: "M 8 20 L 18 20 L 34 27",
+        labels: [
+          {
+            text: "ゆったり\nのトップス",
+            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+          },
+        ],
+      },
+      {
+        path: "M 92 56 L 80 56 L 60 66",
+        labels: [
+          {
+            text: "すっきり\nのパンツ",
+            textStyle: { top: "48vh", right: "5vw", textAlign: "right" as const },
+          },
+        ],
+      },
+    ] satisfies Annotation[],
   },
 ];
 
@@ -151,6 +218,7 @@ export function SilhouetteGallery() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const introOverlayRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
+  const isMobile = useIsMobile();
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -250,16 +318,16 @@ export function SilhouetteGallery() {
           className="h-full w-full object-cover"
         />
 
-        {LINES.map(({ key, annotations, ...rest }) => (
+        {LINES.map(({ key, annotations, annotationsMobile, ...rest }) => (
           <SilhouetteCaption key={key} progress={scrollYProgress} {...rest} />
         ))}
 
-        {LINES.map(({ key, annotations, range }) => (
+        {LINES.map(({ key, annotations, annotationsMobile, range }) => (
           <SilhouetteAnnotations
             key={`ann-${key}`}
             lineKey={key}
             progress={scrollYProgress}
-            annotations={annotations}
+            annotations={isMobile ? annotationsMobile : annotations}
             range={range}
           />
         ))}
@@ -396,12 +464,20 @@ function SilhouetteCaption({
   const featureY = useTransform(progress, [inA + step * 2, inA + step * 3], [16, 0]);
   const bodyOpacity = useTransform(progress, [inA + step * 3, inB], [0, 1]);
   const bodyY = useTransform(progress, [inA + step * 3, inB], [16, 0]);
+  // モバイルは caption がモデルの足元に重なるため、可読性確保の黒グラデスクリムを
+  // caption と同じタイミングで出す（PC は動画の左余白に置けるので不要）。
+  const scrimOpacity = useTransform(progress, [inA, inA + step, outA, outB], [0, 1, 1, 0]);
 
   return (
     <>
       <motion.div
+        style={{ opacity: scrimOpacity }}
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-[36vh] bg-gradient-to-t from-black/80 via-black/40 to-transparent md:hidden"
+        aria-hidden
+      />
+      <motion.div
         style={{ opacity: containerOpacity }}
-        className="pointer-events-none absolute bottom-[10vh] left-[6vw] max-w-md text-paper"
+        className="pointer-events-none absolute bottom-[6vh] left-[6vw] right-[6vw] text-paper md:bottom-[10vh] md:right-auto md:max-w-md"
       >
         <motion.p
           style={{ opacity: labelOpacity, y: labelY }}

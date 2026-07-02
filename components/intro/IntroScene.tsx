@@ -60,21 +60,31 @@ const KEYS: Key[] = [
   { at: 0.45, pos: [-5.5, 0.45, 0], look: [3, 0.5, 0] }, // 床近くまで下降→左端(M/C)から回廊中央へ侵入
   { at: 1.0, pos: [5, 0.5, 0], look: [14, 0.5, 0] }, // 回廊を前進（出口で暗転＝シェル側のブラックアウト）
 ];
+// モバイル（縦画面）: 水平FOVが約22°まで狭まるため、冒頭の真上ビューだけカメラを高くして
+// 「CHROME」全幅（≈6.9unit）を収める。回廊侵入以降は PC と同じ（狭い視野はむしろ回廊向き）。
+const KEYS_MOBILE: Key[] = [
+  { at: 0.0, pos: [0, 19, 0.8], look: [0, 0, 0] },
+  { at: 0.45, pos: [-5.5, 0.45, 0], look: [3, 0.5, 0] },
+  { at: 1.0, pos: [5, 0.5, 0], look: [14, 0.5, 0] },
+];
 
 function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-function sample(p: number): { pos: [number, number, number]; look: [number, number, number] } {
-  if (p <= KEYS[0].at) return { pos: KEYS[0].pos, look: KEYS[0].look };
-  if (p >= KEYS[KEYS.length - 1].at) {
-    const k = KEYS[KEYS.length - 1];
+function sample(
+  keys: Key[],
+  p: number,
+): { pos: [number, number, number]; look: [number, number, number] } {
+  if (p <= keys[0].at) return { pos: keys[0].pos, look: keys[0].look };
+  if (p >= keys[keys.length - 1].at) {
+    const k = keys[keys.length - 1];
     return { pos: k.pos, look: k.look };
   }
   let i = 0;
-  while (i < KEYS.length - 1 && p > KEYS[i + 1].at) i++;
-  const a = KEYS[i];
-  const b = KEYS[i + 1];
+  while (i < keys.length - 1 && p > keys[i + 1].at) i++;
+  const a = keys[i];
+  const b = keys[i + 1];
   const t = (p - a.at) / (b.at - a.at);
   const e = t * t * (3 - 2 * t); // smoothstep
   return {
@@ -84,9 +94,9 @@ function sample(p: number): { pos: [number, number, number]; look: [number, numb
 }
 
 /** scrollYProgress(1本) を読んで毎フレーム カメラを駆動 */
-function CameraRig({ progress }: { progress: MotionValue<number> }) {
+function CameraRig({ progress, keys }: { progress: MotionValue<number>; keys: Key[] }) {
   useFrame((state) => {
-    const { pos, look } = sample(progress.get());
+    const { pos, look } = sample(keys, progress.get());
     state.camera.position.set(pos[0], pos[1], pos[2]);
     state.camera.lookAt(look[0], look[1], look[2]);
   });
@@ -109,9 +119,16 @@ function BgColor({ progress }: { progress: MotionValue<number> }) {
  * スクロール進捗は親(framer useScroll)から MotionValue で1本もらい、useFrame でカメラ駆動。
  * TODO(Phase 5): 回廊最奥に「動画先頭フレーム静止画」の Plane(meshBasicMaterial) → ポータル突入。
  */
-export function IntroScene({ progress }: { progress: MotionValue<number> }) {
+export function IntroScene({
+  progress,
+  mobile = false,
+}: {
+  progress: MotionValue<number>;
+  mobile?: boolean;
+}) {
+  const keys = mobile ? KEYS_MOBILE : KEYS;
   return (
-    <Canvas camera={{ position: [0, 9, 0.8], fov: 45 }} dpr={[1, 2]}>
+    <Canvas camera={{ position: keys[0].pos, fov: 45 }} dpr={[1, 2]}>
       <ambientLight intensity={0.6} />
       <directionalLight position={[4, 6, 5]} intensity={1.4} />
       <directionalLight position={[-5, 2, -3]} intensity={0.4} />
@@ -119,7 +136,7 @@ export function IntroScene({ progress }: { progress: MotionValue<number> }) {
       <Center disableY disableZ>
         <Corridor />
       </Center>
-      <CameraRig progress={progress} />
+      <CameraRig progress={progress} keys={keys} />
       <BgColor progress={progress} />
     </Canvas>
   );

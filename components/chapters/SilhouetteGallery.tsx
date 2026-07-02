@@ -6,6 +6,7 @@ import { ShinyText } from "@/components/animations/ShinyText";
 import { TargetCursor } from "@/components/animations/TargetCursor";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useHydrated } from "@/lib/useHydrated";
+import { useBlobVideoSrc } from "@/lib/useBlobVideoSrc";
 
 /**
  * シルエット見せ場（A/I/Y）。
@@ -229,9 +230,12 @@ export function SilhouetteGallery() {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
 
-  // hydration 後（= isMobile 確定後）に src を導出。SSR/初回ペイントは poster のみ。
+  // hydration 後（= isMobile 確定後）に URL を確定し、blob 化してからスクラブに使う
+  // （iOS Safari は preload を無視するため、メモリに載せないとシークが応答しない）。
+  // SSR/初回ペイント〜blob 取得完了までは poster のみ。
   const hydrated = useHydrated();
-  const videoSrc = hydrated ? (isMobile ? VIDEO_SRC_MOBILE : VIDEO_SRC_DESKTOP) : null;
+  const videoUrl = hydrated ? (isMobile ? VIDEO_SRC_MOBILE : VIDEO_SRC_DESKTOP) : null;
+  const videoSrc = useBlobVideoSrc(videoUrl);
 
   const { scrollYProgress } = useScroll({
     target: ref,

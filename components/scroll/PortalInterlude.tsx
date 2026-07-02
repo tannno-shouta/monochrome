@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useHydrated } from "@/lib/useHydrated";
+import { useBlobVideoSrc } from "@/lib/useBlobVideoSrc";
 
 interface PortalInterludeProps {
   id?: string;
@@ -56,9 +57,12 @@ export function PortalInterlude({
   const isMobile = useIsMobile();
 
   // SSR の HTML に src を書くとプリローダーがモバイルでも PC 用動画を先読みするため、
-  // hydration 後（= isMobile 確定後）に src を導出する。null の間は poster のみ。
+  // hydration 後（= isMobile 確定後）に URL を確定し、blob 化してからスクラブに使う
+  // （iOS Safari は preload を無視するため、メモリに載せないとシークが応答しない）。
+  // null の間は poster のみ。
   const hydrated = useHydrated();
-  const resolvedSrc = hydrated ? (isMobile && srcMobile ? srcMobile : src) : null;
+  const resolvedUrl = hydrated ? (isMobile && srcMobile ? srcMobile : src) : null;
+  const resolvedSrc = useBlobVideoSrc(resolvedUrl);
 
   const { scrollYProgress } = useScroll({
     // reduced-motion 分岐では ref を描画しないため、その時は target を渡さない

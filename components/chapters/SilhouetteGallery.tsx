@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { ShinyText } from "@/components/animations/ShinyText";
 import { TargetCursor } from "@/components/animations/TargetCursor";
 import { useIsMobile } from "@/lib/useIsMobile";
+import { useHydrated } from "@/lib/useHydrated";
 
 /**
  * シルエット見せ場（A/I/Y）。
@@ -62,6 +63,14 @@ type Annotation = {
 // 動画(1280x720)は object-cover なので、PC(横長)は動画座標≒viewport座標だが、
 // モバイル縦画面では「動画の中央約26%幅」だけが見える＝モデルが画面幅いっぱいに拡大される。
 // そのため PC とモバイルで指し先座標を別データで持つ（モデル位置: 縦は等倍、横は中央拡大）。
+
+// 動画ソース。モバイル版は中央 512px(40%) クロップ＝縦画面で見える範囲（最大でも中央32%）を
+// 全て含むので、object-cover の見え方・annotationsMobile の座標は PC 素材と完全一致のまま
+// 26MB→6.6MB に軽量化（all-intra 維持でスクラブ互換）。
+// SSR の HTML に src を書くとブラウザのプリローダーがモバイルでも 26MB を先読みし始めるため、
+// src はマウント後に isMobile 確定してから注入する。
+const VIDEO_SRC_DESKTOP = "/videos/gallery-graded.mp4";
+const VIDEO_SRC_MOBILE = "/videos/gallery-mobile.mp4";
 
 const LINES = [
   {
@@ -220,6 +229,10 @@ export function SilhouetteGallery() {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
 
+  // hydration 後（= isMobile 確定後）に src を導出。SSR/初回ペイントは poster のみ。
+  const hydrated = useHydrated();
+  const videoSrc = hydrated ? (isMobile ? VIDEO_SRC_MOBILE : VIDEO_SRC_DESKTOP) : null;
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end end"],
@@ -265,12 +278,6 @@ export function SilhouetteGallery() {
     let raf = 0;
     let target = 0;
     let ready = false;
-    const onMeta = () => {
-      ready = (video.duration || 0) > 0;
-      forcePause();
-    };
-    if (video.readyState >= 1) onMeta();
-    video.addEventListener("loadedmetadata", onMeta);
 
     const tick = () => {
       raf = 0;
@@ -285,6 +292,18 @@ export function SilhouetteGallery() {
         raf = requestAnimationFrame(tick);
       }
     };
+
+    // onMeta は readyState>=1 なら同期実行されるため、tick より後に定義しない（TDZ 回避）
+    const onMeta = () => {
+      ready = (video.duration || 0) > 0;
+      forcePause();
+      // src 注入/差替（hydration 後・breakpoint またぎ）直後も、次の scroll イベントを
+      // 待たずに現在のスクロール位置のフレームへ即同期させる
+      target = mapScrollToTime(Math.min(Math.max(scrollYProgress.get(), 0), 1));
+      if (ready && !raf) raf = requestAnimationFrame(tick);
+    };
+    if (video.readyState >= 1) onMeta();
+    video.addEventListener("loadedmetadata", onMeta);
 
     const unsubscribe = scrollYProgress.on("change", (p) => {
       if (!ready) return;
@@ -309,7 +328,7 @@ export function SilhouetteGallery() {
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         <video
           ref={videoRef}
-          src="/videos/gallery-graded.mp4"
+          src={videoSrc ?? undefined}
           poster="/images/gallery-poster-graded.jpg"
           muted
           playsInline

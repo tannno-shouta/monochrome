@@ -24,6 +24,7 @@ export default function Home() {
         <PortalInterlude
           id="interlude"
           src="/videos/interlude.mp4"
+          srcMobile="/videos/interlude-mobile.mp4"
           poster="/images/interlude-poster.jpg"
           label="モノトーンの世界に没入するインタールード映像"
           eyebrow="Step Inside"

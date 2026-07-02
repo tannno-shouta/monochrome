@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
   useScroll,
@@ -8,11 +8,15 @@ import {
   useMotionTemplate,
   useReducedMotion,
 } from "framer-motion";
+import { useIsMobile } from "@/lib/useIsMobile";
+import { useHydrated } from "@/lib/useHydrated";
 
 interface PortalInterludeProps {
   id?: string;
   /** 動画ソース（スクロール連動スクラブ・末尾フラッシュアウト前提の素材） */
   src: string;
+  /** モバイル用の軽量動画ソース（中央クロップ版。省略時は src を使う） */
+  srcMobile?: string;
   /** ポスター画像（reduced-motion 時／読込前／モバイル背景） */
   poster: string;
   /** スクリーンリーダー・代替テキスト */
@@ -39,6 +43,7 @@ interface PortalInterludeProps {
 export function PortalInterlude({
   id,
   src,
+  srcMobile,
   poster,
   label,
   eyebrow,
@@ -48,7 +53,12 @@ export function PortalInterlude({
   const bgVideoRef = useRef<HTMLVideoElement>(null);
   const fgVideoRef = useRef<HTMLVideoElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const [isMobile, setIsMobile] = useState(false);
+  const isMobile = useIsMobile();
+
+  // SSR の HTML に src を書くとプリローダーがモバイルでも PC 用動画を先読みするため、
+  // hydration 後（= isMobile 確定後）に src を導出する。null の間は poster のみ。
+  const hydrated = useHydrated();
+  const resolvedSrc = hydrated ? (isMobile && srcMobile ? srcMobile : src) : null;
 
   const { scrollYProgress } = useScroll({
     // reduced-motion 分岐では ref を描画しないため、その時は target を渡さない
@@ -80,14 +90,6 @@ export function PortalInterlude({
   // 入口の黒フラッシュ（吸い込み）。出口は動画末尾の白フラッシュアウトに任せる
   const flash = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
 
-  useEffect(() => {
-    const decide = () =>
-      setIsMobile(window.matchMedia("(max-width: 767px)").matches);
-    decide();
-    window.addEventListener("resize", decide);
-    return () => window.removeEventListener("resize", decide);
-  }, []);
-
   // スクロール連動スクラブ: scrollYProgress を video.currentTime に写像。
   // 末尾の白フラッシュアウトが「Interlude を抜ける瞬間」に1回だけ出る（ループ点滅しない）。
   useEffect(() => {
@@ -100,13 +102,6 @@ export function PortalInterlude({
     let raf = 0;
     let target = 0;
     let duration = 0;
-    const onMeta = () => {
-      duration = Math.max(...vids.map((v) => v.duration || 0));
-    };
-    vids.forEach((v) => {
-      if (v.readyState >= 1) onMeta();
-      v.addEventListener("loadedmetadata", onMeta);
-    });
 
     const tick = () => {
       raf = 0;
@@ -125,6 +120,21 @@ export function PortalInterlude({
       if (again) raf = requestAnimationFrame(tick);
     };
 
+    // onMeta は readyState>=1 なら同期実行されるため、tick より後に定義しない（TDZ 回避）
+    const onMeta = () => {
+      duration = Math.max(...vids.map((v) => v.duration || 0));
+      // src 注入/差替（hydration 後・breakpoint またぎ）直後も、次の scroll イベントを
+      // 待たずに現在のスクロール位置のフレームへ即同期させる
+      if (duration > 0) {
+        target = Math.min(Math.max(scrollYProgress.get(), 0), 1) * duration;
+        if (!raf) raf = requestAnimationFrame(tick);
+      }
+    };
+    vids.forEach((v) => {
+      if (v.readyState >= 1) onMeta();
+      v.addEventListener("loadedmetadata", onMeta);
+    });
+
     const unsubscribe = scrollYProgress.on("change", (p) => {
       if (duration <= 0) return;
       target = Math.min(Math.max(p, 0), 1) * duration;
@@ -136,7 +146,8 @@ export function PortalInterlude({
       if (raf) cancelAnimationFrame(raf);
       vids.forEach((v) => v.removeEventListener("loadedmetadata", onMeta));
     };
-  }, [prefersReducedMotion, isMobile, scrollYProgress]);
+    // resolvedSrc 確定後に bg <video> が出現するため、確定時に再実行して両動画を捕捉し直す
+  }, [prefersReducedMotion, isMobile, scrollYProgress, resolvedSrc]);
 
   if (prefersReducedMotion) {
     return (
@@ -169,8 +180,8 @@ export function PortalInterlude({
           style={{ scale: bgScale, filter: bgFilter, willChange: "transform" }}
           className="absolute inset-0"
         >
-          {isMobile ? (
-            // モバイル: 背景は静止画でデコードを1枚に削減
+          {isMobile || !resolvedSrc ? (
+            // モバイル: 背景は静止画でデコードを1枚に削減（src 確定前も poster で統一）
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={poster}
@@ -181,7 +192,7 @@ export function PortalInterlude({
           ) : (
             <video
               ref={bgVideoRef}
-              src={src}
+              src={resolvedSrc}
               poster={poster}
               muted
               playsInline
@@ -209,7 +220,7 @@ export function PortalInterlude({
             {/* 枠内に動画（タグ形にクリップ → 長方形へ展開） */}
             <motion.video
               ref={fgVideoRef}
-              src={src}
+              src={resolvedSrc ?? undefined}
               poster={poster}
               muted
               playsInline

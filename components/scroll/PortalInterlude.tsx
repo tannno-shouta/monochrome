@@ -11,6 +11,7 @@ import {
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useHydrated } from "@/lib/useHydrated";
 import { useBlobVideoSrc } from "@/lib/useBlobVideoSrc";
+import { mirrorVideoToCanvas, primeVideoDecode } from "@/lib/videoCanvasMirror";
 
 interface PortalInterludeProps {
   id?: string;
@@ -53,6 +54,7 @@ export function PortalInterlude({
   const ref = useRef<HTMLDivElement>(null);
   const bgVideoRef = useRef<HTMLVideoElement>(null);
   const fgVideoRef = useRef<HTMLVideoElement>(null);
+  const fgCanvasRef = useRef<HTMLCanvasElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
 
@@ -93,6 +95,26 @@ export function PortalInterlude({
 
   // 入口の黒フラッシュ（吸い込み）。出口は動画末尾の白フラッシュアウトに任せる
   const flash = useTransform(scrollYProgress, [0, 0.1], [1, 0]);
+
+  // モバイル（iOS 対策）: fg の表示は canvas ミラーに任せ、video はシーク専用にする。
+  // iOS はデコーダを落として video 要素が黒落ち/静止画のままになるため、
+  // seeked のたびに canvas へ描画 ＋ priming（muted play→pause）で起こす。
+  useEffect(() => {
+    if (!isMobile || prefersReducedMotion) return;
+    const video = fgVideoRef.current;
+    const canvas = fgCanvasRef.current;
+    if (!video || !canvas || !resolvedSrc) return;
+
+    const cleanupMirror = mirrorVideoToCanvas(video, canvas);
+    const prime = () => primeVideoDecode(video);
+    if (video.readyState >= 1) prime();
+    else video.addEventListener("loadedmetadata", prime, { once: true });
+
+    return () => {
+      cleanupMirror();
+      video.removeEventListener("loadedmetadata", prime);
+    };
+  }, [isMobile, prefersReducedMotion, resolvedSrc]);
 
   // スクロール連動スクラブ: scrollYProgress を video.currentTime に写像。
   // 末尾の白フラッシュアウトが「Interlude を抜ける瞬間」に1回だけ出る（ループ点滅しない）。
@@ -221,18 +243,28 @@ export function PortalInterlude({
             }}
             className="relative aspect-[13/16] w-[44vw] md:w-[26vw]"
           >
-            {/* 枠内に動画（タグ形にクリップ → 長方形へ展開） */}
-            <motion.video
-              ref={fgVideoRef}
-              src={resolvedSrc ?? undefined}
-              poster={poster}
-              muted
-              playsInline
-              preload="auto"
-              aria-label={label}
+            {/* 枠内に動画（タグ形にクリップ → 長方形へ展開）。
+                clipPath はラッパーに掛け、モバイルは canvas ミラーを video の上に重ねる */}
+            <motion.div
               style={{ clipPath: tagClip }}
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+              className="absolute inset-0 overflow-hidden"
+            >
+              <video
+                ref={fgVideoRef}
+                src={resolvedSrc ?? undefined}
+                poster={poster}
+                muted
+                playsInline
+                preload="auto"
+                aria-label={label}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+              <canvas
+                ref={fgCanvasRef}
+                aria-hidden
+                className="pointer-events-none absolute inset-0 h-full w-full md:hidden"
+              />
+            </motion.div>
 
             {/* 下げ札の意匠（輪郭・紐穴・吊り紐・ラベル）— 終盤でフェード */}
             <motion.div

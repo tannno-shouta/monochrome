@@ -7,6 +7,7 @@ import { TargetCursor } from "@/components/animations/TargetCursor";
 import { useIsMobile } from "@/lib/useIsMobile";
 import { useHydrated } from "@/lib/useHydrated";
 import { useBlobVideoSrc } from "@/lib/useBlobVideoSrc";
+import { mirrorVideoToCanvas, primeVideoDecode } from "@/lib/videoCanvasMirror";
 
 /**
  * シルエット見せ場（A/I/Y）。
@@ -226,6 +227,7 @@ const LINES = [
 export function SilhouetteGallery() {
   const ref = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const introOverlayRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
@@ -241,6 +243,26 @@ export function SilhouetteGallery() {
     target: ref,
     offset: ["start start", "end end"],
   });
+
+  // モバイル（iOS 対策）: 表示は canvas ミラーに任せ、video はシーク専用にする。
+  // iOS はデコーダを落として video 要素が「最初のコマ→真っ黒」になるため、
+  // seeked のたびに canvas へ描画（黒落ちしても最後のフレームが残る）＋ priming で起こす。
+  useEffect(() => {
+    if (!isMobile || prefersReducedMotion) return;
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas || !videoSrc) return;
+
+    const cleanupMirror = mirrorVideoToCanvas(video, canvas);
+    const prime = () => primeVideoDecode(video);
+    if (video.readyState >= 1) prime();
+    else video.addEventListener("loadedmetadata", prime, { once: true });
+
+    return () => {
+      cleanupMirror();
+      video.removeEventListener("loadedmetadata", prime);
+    };
+  }, [isMobile, prefersReducedMotion, videoSrc]);
 
   // Hero→シルエット に入るたび（下/上スクロール問わず）黒からフェードイン演出を再発火。
   // 同名 class を付け直しても animation は再開しないため、一旦外す→強制 reflow→再付与する。
@@ -339,6 +361,13 @@ export function SilhouetteGallery() {
           preload="auto"
           aria-label="A/I/Y シルエットのモデルを見渡すギャラリー映像"
           className="h-full w-full object-cover"
+        />
+
+        {/* モバイル: video の黒落ち対策の表示用 canvas（video の上・テキスト類の下） */}
+        <canvas
+          ref={canvasRef}
+          aria-hidden
+          className="pointer-events-none absolute inset-0 h-full w-full md:hidden"
         />
 
         {LINES.map(({ key, annotations, annotationsMobile, ...rest }) => (

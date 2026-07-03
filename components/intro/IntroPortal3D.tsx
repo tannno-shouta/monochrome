@@ -179,9 +179,10 @@ export function IntroPortal3D() {
             ○ Monochrome
           </div>
 
-          {/* 大型タイトル + リード文：画面右寄り集約（縦中央）。md未満は画面下部に重ねる
-              （bottom-24 で左下ブランドラベルとの重なりを回避） */}
-          <div className="absolute bottom-24 right-6 max-w-[88vw] md:bottom-auto md:right-[6vw] md:top-1/2 md:max-w-[36vw] md:-translate-y-1/2">
+          {/* 大型タイトル + リード文：画面右寄り集約（縦中央）。md未満は画面下部寄りに重ねる
+              （bottom-48 で左下ブランドラベルと十分な間隔を確保）。
+              PC は md:max-w-[42vw] まで広げてリード文が 1 行に収まるようにする。 */}
+          <div className="absolute bottom-48 right-6 max-w-[88vw] md:bottom-auto md:right-[6vw] md:top-1/2 md:max-w-[42vw] md:-translate-y-1/2">
             <BlurText
               text="色を捨てた。"
               delay={120}
@@ -194,11 +195,12 @@ export function IntroPortal3D() {
               stepDuration={1.0}
               className="mt-2 block font-heading text-3xl leading-tight text-paper md:text-5xl lg:text-6xl"
             />
+            {/* リード文: SP は max-w-md で自然折返し、PC は親幅(42vw)を使い切って 1 行 */}
             <BlurText
               text="ファッションセンスとは、シルエットと素材感のロジックを纏うこと。"
               delay={700}
               stepDuration={1.0}
-              className="mt-8 block max-w-md font-heading text-sm leading-loose text-paper/85 md:text-base"
+              className="mt-8 block max-w-md font-heading text-sm leading-loose text-paper/85 md:max-w-none md:text-base"
             />
           </div>
 

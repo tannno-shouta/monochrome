@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import dynamic from "next/dynamic";
 import {
   motion,
@@ -69,6 +69,20 @@ export function IntroPortal3D() {
   const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
+  // 3D シーン(Text3D フォント読込＋初回描画)の完了通知。
+  // これが入場アニメの単一起点＝overlay フェードと BlurText の mount を厳密に揃える(P1-A)。
+  const [sceneReady3D, setSceneReady3D] = useState(false);
+  const handleSceneReady = useCallback(() => setSceneReady3D(true), []);
+
+  // fallback は 3D 依存がないので即 ready 扱い、pending は非表示のまま。
+  // 3D は onReady 通知待ちだがフォント 404 やネット激遅で永久グレーにならないよう 3s セーフティタイムアウト。
+  useEffect(() => {
+    if (mode !== "3d") return;
+    const timer = setTimeout(() => setSceneReady3D(true), 3000);
+    return () => clearTimeout(timer);
+  }, [mode]);
+  const isReady = mode === "fallback" || (mode === "3d" && sceneReady3D);
+
   // 縦長セクションの通過進捗 0→1（カメラ駆動の単一ソース）
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -126,22 +140,33 @@ export function IntroPortal3D() {
           }
           className="absolute inset-0"
         >
-          {mode === "3d" && <IntroScene progress={scrollYProgress} mobile={isMobile} />}
+          {mode === "3d" && (
+            <IntroScene
+              progress={scrollYProgress}
+              mobile={isMobile}
+              onReady={handleSceneReady}
+            />
+          )}
           {mode === "fallback" && <IntroFallback />}
         </motion.div>
 
         {/* Canvas 入場 fade: Canvas に直接 CSS filter/opacity が効きづらいため、
             親 section と同色(#9b9b9b)の overlay を被せて 1.0s で透明化＝
-            「背景色から Canvas が滲み出る」 演出。BlurText の duration と完全同期。 */}
+            「背景色から Canvas が滲み出る」 演出。
+            isReady(＝3D 描画準備完了 or fallback 確定)で初めてフェード開始することで、
+            "overlay が消えた後に 3D が遅れて出る" 現象を排除する(P1-A)。 */}
         <motion.div
           initial={{ opacity: 1 }}
-          animate={{ opacity: 0 }}
+          animate={{ opacity: isReady ? 0 : 1 }}
           transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1] }}
           className="pointer-events-none absolute inset-0 z-[5] bg-[#9b9b9b]"
           aria-hidden
         />
 
-        {/* ds-k.site 風テキストオーバーレイ：冒頭のみ表示、スクロール開始ですぐ消える（双方向） */}
+        {/* ds-k.site 風テキストオーバーレイ：冒頭のみ表示、スクロール開始ですぐ消える（双方向）。
+            isReady で初めて mount することで BlurText の IntersectionObserver が
+            "3D が描画された瞬間" にトリガされ、3D 出現と blur→clear が同期する。 */}
+        {isReady && (
         <motion.div
           style={{ opacity: overlayOpacity }}
           className="pointer-events-none absolute inset-0 z-10"
@@ -185,6 +210,7 @@ export function IntroPortal3D() {
             MONOCHROME / Chapter 0.01
           </div>
         </motion.div>
+        )}
 
         <motion.div
           style={{ opacity: blackout }}

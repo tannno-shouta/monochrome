@@ -92,6 +92,7 @@ export function BlurText({
   }
 
   // 1要素（日本語など空白なし）= 段落まるごと blur（通常フローで折り返す）
+  // delay は「inView になってから発火するまでの猶予(ms)」として扱う（複数要素の stagger と対を成す）。
   if (elements.length <= 1) {
     return (
       <motion.p
@@ -99,7 +100,7 @@ export function BlurText({
         className={className}
         initial={FROM}
         animate={inView ? kf : FROM}
-        transition={{ duration: totalDuration, times, ease: easing }}
+        transition={{ duration: totalDuration, times, delay: delay / 1000, ease: easing }}
         style={{ willChange: "filter, opacity" }}
       >
         {text}

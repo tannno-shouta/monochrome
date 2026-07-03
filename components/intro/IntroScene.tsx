@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Center, Text3D } from "@react-three/drei";
@@ -115,6 +115,24 @@ function BgColor({ progress }: { progress: MotionValue<number> }) {
 }
 
 /**
+ * Suspense 境界内の Text3D フォント/ジオメトリが揃った瞬間を親に通知する。
+ * useFrame は Suspense 解決後の初回描画タイミングで発火するため、
+ * Text3D の顔が実際にキャンバスへ描かれた「次フレーム」に onReady を呼ぶ。
+ * 目的: 3D の出現と overlay フェード＋BlurText の起点を厳密に揃える（P1-A）。
+ */
+function ReadyPing({ onReady }: { onReady: () => void }) {
+  const fired = useRef(false);
+  useFrame(() => {
+    if (fired.current) return;
+    fired.current = true;
+    // 実描画1フレームぶん待ってから通知。useFrame は renderer.render の直前に走るため、
+    // ここで即通知するとキャンバスへの1回目の draw より前に overlay が消える恐れがある。
+    requestAnimationFrame(onReady);
+  });
+  return null;
+}
+
+/**
  * R3F 本体（Canvas）。IntroPortal3D から dynamic import（ssr:false）で遅延読込される。
  * スクロール進捗は親(framer useScroll)から MotionValue で1本もらい、useFrame でカメラ駆動。
  * TODO(Phase 5): 回廊最奥に「動画先頭フレーム静止画」の Plane(meshBasicMaterial) → ポータル突入。
@@ -122,9 +140,12 @@ function BgColor({ progress }: { progress: MotionValue<number> }) {
 export function IntroScene({
   progress,
   mobile = false,
+  onReady,
 }: {
   progress: MotionValue<number>;
   mobile?: boolean;
+  /** Text3D フォント読込＋初回描画が完了した瞬間に1度だけ呼ばれる（親の入場同期起点） */
+  onReady?: () => void;
 }) {
   const keys = mobile ? KEYS_MOBILE : KEYS;
   return (
@@ -132,10 +153,15 @@ export function IntroScene({
       <ambientLight intensity={0.6} />
       <directionalLight position={[4, 6, 5]} intensity={1.4} />
       <directionalLight position={[-5, 2, -3]} intensity={0.4} />
-      {/* 床に寝かせ上に押し出し → 壁は y=0 から上へ（X方向だけセンタリング） */}
-      <Center disableY disableZ>
-        <Corridor />
-      </Center>
+      {/* Text3D はフォント読込中に suspend するため明示的に Suspense で包む。
+          ReadyPing を同じ境界に置くことで「Corridor が描ける状態」になった瞬間に発火する。 */}
+      <Suspense fallback={null}>
+        {/* 床に寝かせ上に押し出し → 壁は y=0 から上へ（X方向だけセンタリング） */}
+        <Center disableY disableZ>
+          <Corridor />
+        </Center>
+        {onReady && <ReadyPing onReady={onReady} />}
+      </Suspense>
       <CameraRig progress={progress} keys={keys} />
       <BgColor progress={progress} />
     </Canvas>

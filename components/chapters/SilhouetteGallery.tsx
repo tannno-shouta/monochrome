@@ -106,12 +106,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        // トップス: text top 30vh(モデル肩付近)、線は text 下(38)から model 胸元(47)へ
-        path: "M 8 38 L 18 38 L 30 47",
+        // トップス: text top 24vh(モデル肩の上寄り)、線は text 下(32)から model 胸元(41)へ
+        path: "M 8 32 L 18 32 L 30 41",
         labels: [
           {
             text: "ジャストサイズ\nのトップス",
-            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "24vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },
@@ -156,12 +156,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        // トップス: A-LINE と同じ配置(モデル肩付近から胸元へ)
-        path: "M 8 38 L 18 38 L 28 48",
+        // トップス: A-LINE と同じ配置(モデル肩の上寄りから胸元へ)
+        path: "M 8 32 L 18 32 L 28 42",
         labels: [
           {
             text: "セミワイド\nのトップス",
-            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "24vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },
@@ -206,12 +206,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        // トップス: A-LINE / I-LINE と同じ配置(モデル肩付近から胸元へ)
-        path: "M 8 38 L 18 38 L 34 45",
+        // トップス: A-LINE / I-LINE と同じ配置(モデル肩の上寄りから胸元へ)
+        path: "M 8 32 L 18 32 L 34 39",
         labels: [
           {
             text: "ゆったり\nのトップス",
-            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "24vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },

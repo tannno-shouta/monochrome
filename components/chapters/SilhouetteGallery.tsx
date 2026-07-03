@@ -68,11 +68,12 @@ type Annotation = {
 
 // 動画ソース。モバイル版は中央 512px(40%) クロップ＝縦画面で見える範囲（最大でも中央32%）を
 // 全て含むので、object-cover の見え方・annotationsMobile の座標は PC 素材と完全一致のまま
-// 26MB→6.6MB に軽量化（all-intra 維持でスクラブ互換）。
+// 26MB → 13MB に軽量化（all-intra 維持でスクラブ互換、bitrate 3Mbps で iPhone Retina 画質）。
 // SSR の HTML に src を書くとブラウザのプリローダーがモバイルでも 26MB を先読みし始めるため、
 // src はマウント後に isMobile 確定してから注入する。
+// -v2 サフィックス: 旧 1.5Mbps エンコードのブラウザキャッシュを確実にバストするための命名。
 const VIDEO_SRC_DESKTOP = "/videos/gallery-graded.mp4";
-const VIDEO_SRC_MOBILE = "/videos/gallery-mobile.mp4";
+const VIDEO_SRC_MOBILE = "/videos/gallery-mobile-v2.mp4";
 
 const LINES = [
   {
@@ -105,11 +106,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        path: "M 8 20 L 18 20 L 30 29",
+        // トップス: text top 30vh(モデル肩付近)、線は text 下(38)から model 胸元(47)へ
+        path: "M 8 38 L 18 38 L 30 47",
         labels: [
           {
             text: "ジャストサイズ\nのトップス",
-            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },
@@ -154,11 +156,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        path: "M 8 20 L 18 20 L 28 30",
+        // トップス: A-LINE と同じ配置(モデル肩付近から胸元へ)
+        path: "M 8 38 L 18 38 L 28 48",
         labels: [
           {
             text: "セミワイド\nのトップス",
-            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },
@@ -203,11 +206,12 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        path: "M 8 20 L 18 20 L 34 27",
+        // トップス: A-LINE / I-LINE と同じ配置(モデル肩付近から胸元へ)
+        path: "M 8 38 L 18 38 L 34 45",
         labels: [
           {
             text: "ゆったり\nのトップス",
-            textStyle: { top: "12vh", left: "5vw", textAlign: "left" as const },
+            textStyle: { top: "30vh", left: "5vw", textAlign: "left" as const },
           },
         ],
       },

@@ -26,7 +26,9 @@ export function mirrorVideoToCanvas(
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
     if (!cw || !ch) return;
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // iPhone(DPR3)のRetinaシャープさを活かすため上限を 3 に緩和。
+    // iPhone 8世代以前(DPR2)は自動で 2 のまま。バッファ増は canvas 面積比 2.25 倍程度。
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const pw = Math.round(cw * dpr);
     const ph = Math.round(ch * dpr);
     if (canvas.width !== pw || canvas.height !== ph) {

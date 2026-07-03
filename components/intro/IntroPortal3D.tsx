@@ -113,11 +113,19 @@ export function IntroPortal3D() {
   // 3D Canvas の演出：冒頭は ds-k 風に「左寄せ + 傾き」 で配置し、テキストと共存。
   // スクロール開始でゆっくり真っ直ぐ画面いっぱいに戻り、既存の回廊カメラワークへ繋ぐ。
   // モバイルはテキストが下部配置で「左に避ける」必要がないため、x シフトなし＋控えめな傾きに。
+  // モバイル冒頭のみ y=-20% にシフト：3D 文字を画面上寄りに寄せて、
+  //  ①上部の空白を埋める ②下部コピー(bottom-48)との重なりを回避 ③スクロール開始で 0 に戻し、
+  // 既存の回廊カメラワークとシームレスに接続する。
   const canvasRotate = useTransform(scrollYProgress, [0, 0.12], isMobile ? [-3, 0] : [-5, 0]);
   const canvasTranslateX = useTransform(
     scrollYProgress,
     [0, 0.12],
     isMobile ? ["0%", "0%"] : ["-15%", "0%"],
+  );
+  const canvasTranslateY = useTransform(
+    scrollYProgress,
+    [0, 0.12],
+    isMobile ? ["-20%", "0%"] : ["0%", "0%"],
   );
   const canvasScale = useTransform(scrollYProgress, [0, 0.12], isMobile ? [0.92, 1] : [0.85, 1]);
 
@@ -133,6 +141,7 @@ export function IntroPortal3D() {
               ? {
                   rotate: canvasRotate,
                   x: canvasTranslateX,
+                  y: canvasTranslateY,
                   scale: canvasScale,
                   transformOrigin: "center center",
                 }

@@ -156,8 +156,9 @@ const LINES = [
     ] satisfies Annotation[],
     annotationsMobile: [
       {
-        // トップス: A-LINE と同じ配置(モデル肩の上寄りから胸元へ)
-        path: "M 8 32 L 18 32 L 28 42",
+        // トップス: I-LINE はロングコートで面積が大きいので、線を右下方向に伸ばして
+        // コート本体(ベルト付近)まで確実に届かせる
+        path: "M 8 32 L 18 32 L 42 60",
         labels: [
           {
             text: "セミワイド\nのトップス",

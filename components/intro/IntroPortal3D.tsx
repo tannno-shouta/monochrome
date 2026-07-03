@@ -125,7 +125,7 @@ export function IntroPortal3D() {
   const canvasTranslateY = useTransform(
     scrollYProgress,
     [0, 0.12],
-    isMobile ? ["-20%", "0%"] : ["0%", "0%"],
+    isMobile ? ["-12%", "0%"] : ["0%", "0%"],
   );
   const canvasScale = useTransform(scrollYProgress, [0, 0.12], isMobile ? [0.92, 1] : [0.85, 1]);
 

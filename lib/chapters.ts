@@ -30,8 +30,8 @@ export const chapters: Chapter[] = [
   {
     id: "why",
     no: "01",
-    titleEn: "Why It Works",
-    titleJa: "なぜ“効く”のか",
+    titleEn: "The Three Beauties",
+    titleJa: "無彩色の三つの美",
     motion: "vertical-parallax",
   },
   {

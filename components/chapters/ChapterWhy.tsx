@@ -39,8 +39,7 @@ export function ChapterWhy() {
         <div className="order-2 md:order-1">
           <figure className="relative">
             <div className="aspect-[3/4] w-full overflow-hidden bg-[#161616]">
-              {/* TODO: 専用画像 /images/why.jpg を用意したら差し替え */}
-              <TiltedCard imageSrc="/images/gallery-portal.jpg" altText="無彩色の空間" />
+              <TiltedCard imageSrc="/images/why.jpg" altText="無彩色オールブラックのコーディネート" />
             </div>
             <span className="pointer-events-none absolute inset-3 border border-paper/20" />
             <figcaption className="absolute -bottom-3 left-4 bg-[#0a0a0a] px-3 font-display text-[10px] tracking-[0.35em] text-gray-2">

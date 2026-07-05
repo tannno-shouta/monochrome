@@ -505,21 +505,51 @@ function SilhouetteCaption({
   range: readonly [number, number, number, number];
 }) {
   const [inA, inB, outA, outB] = range;
-  // 親コンテナ全体の表示制御（フェードアウトもこれで一括）
-  const containerOpacity = useTransform(progress, [inA, outA, outB], [1, 1, 0]);
   // 4要素を停留区間 inA→inB の中で順次フェードイン（label → title → feature → body）
   const step = (inB - inA) / 4;
-  const labelOpacity = useTransform(progress, [inA, inA + step], [0, 1]);
+  // 親コンテナ: 4-point 制御 [inA, inA+step, outA, outB] → [0, 1, 1, 0] で
+  // 範囲外は完全に 0（他章に切り替わったあと残らないよう明示）。
+  const containerOpacity = useTransform(
+    progress,
+    [inA, inA + step, outA, outB],
+    [0, 1, 1, 0],
+  );
+  // 範囲外は DOM 描画自体を止めて、ShinyText 等の親 opacity 無視系が透け見えるのを完全防止。
+  // 前後に 0.02 のバッファでフリッカ回避。
+  const containerDisplay = useTransform(progress, (p) =>
+    p >= inA - 0.02 && p <= outB + 0.02 ? "block" : "none",
+  );
+  // 個別要素も 4-point 化：フェードイン + フェードアウトを明示。
+  // ここまでする理由：containerOpacity が本来なら 0 で子を隠すはずだが、
+  // ShinyText の background-clip + gradient animation は親 CSS opacity を素直に継承しないケースがあるため、
+  // 個々の要素側でも outA→outB で 0 に落として二重保険にする。
+  const labelOpacity = useTransform(
+    progress,
+    [inA, inA + step, outA, outB],
+    [0, 1, 1, 0],
+  );
   const labelY = useTransform(progress, [inA, inA + step], [16, 0]);
   // TREND タグは fade in → 停留 → fade out まで含めて制御（caption と独立した motion.div のため）
   const trendOpacity = useTransform(progress, [inA, inA + step, outA, outB], [0, 1, 1, 0]);
   // 入場バウンス: scale 0.9 → 1 で軽くポップ
   const trendScale = useTransform(progress, [inA, inA + step], [0.9, 1]);
-  const titleOpacity = useTransform(progress, [inA + step, inA + step * 2], [0, 1]);
+  const titleOpacity = useTransform(
+    progress,
+    [inA + step, inA + step * 2, outA, outB],
+    [0, 1, 1, 0],
+  );
   const titleY = useTransform(progress, [inA + step, inA + step * 2], [16, 0]);
-  const featureOpacity = useTransform(progress, [inA + step * 2, inA + step * 3], [0, 1]);
+  const featureOpacity = useTransform(
+    progress,
+    [inA + step * 2, inA + step * 3, outA, outB],
+    [0, 1, 1, 0],
+  );
   const featureY = useTransform(progress, [inA + step * 2, inA + step * 3], [16, 0]);
-  const bodyOpacity = useTransform(progress, [inA + step * 3, inB], [0, 1]);
+  const bodyOpacity = useTransform(
+    progress,
+    [inA + step * 3, inB, outA, outB],
+    [0, 1, 1, 0],
+  );
   const bodyY = useTransform(progress, [inA + step * 3, inB], [16, 0]);
   // モバイルは caption がモデルの足元に重なるため、可読性確保の黒グラデスクリムを
   // caption と同じタイミングで出す（PC は動画の左余白に置けるので不要）。
@@ -533,7 +563,7 @@ function SilhouetteCaption({
         aria-hidden
       />
       <motion.div
-        style={{ opacity: containerOpacity }}
+        style={{ opacity: containerOpacity, display: containerDisplay }}
         className="pointer-events-none absolute bottom-[6vh] left-[6vw] right-[6vw] text-paper md:bottom-[10vh] md:right-auto md:max-w-md"
       >
         <motion.p

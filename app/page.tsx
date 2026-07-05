@@ -3,11 +3,11 @@ import { Footer } from "@/components/layout/Footer";
 import { IntroPortal3D } from "@/components/intro/IntroPortal3D";
 import { SilhouetteGallery } from "@/components/chapters/SilhouetteGallery";
 import { ChapterWhy } from "@/components/chapters/ChapterWhy";
+import { ChapterRatio } from "@/components/chapters/ChapterRatio";
 import { ChapterTone } from "@/components/chapters/ChapterTone";
 import { PortalInterlude } from "@/components/scroll/PortalInterlude";
 import { ChapterTexture } from "@/components/chapters/ChapterTexture";
 import { ChapterVariations } from "@/components/chapters/ChapterVariations";
-import { ChapterSilhouette } from "@/components/chapters/ChapterSilhouette";
 import { ChapterIroke } from "@/components/chapters/ChapterIroke";
 import { ChapterLookbook } from "@/components/chapters/ChapterLookbook";
 import { Closing } from "@/components/chapters/Closing";
@@ -20,6 +20,7 @@ export default function Home() {
         <IntroPortal3D />
         <SilhouetteGallery />
         <ChapterWhy />
+        <ChapterRatio />
         <ChapterTone />
         <PortalInterlude
           id="interlude"
@@ -32,7 +33,6 @@ export default function Home() {
         />
         <ChapterTexture />
         <ChapterVariations />
-        <ChapterSilhouette />
         <ChapterIroke />
         <ChapterLookbook />
         <Closing />

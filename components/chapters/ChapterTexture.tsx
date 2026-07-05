@@ -25,7 +25,7 @@ export function ChapterTexture() {
 
       <div className="relative mx-auto max-w-6xl px-6">
         <ChapterMarker
-          no="03"
+          no="04"
           titleEn="Contrast by Texture"
           titleJa="質感でコントラスト"
           inverted

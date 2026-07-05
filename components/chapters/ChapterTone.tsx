@@ -36,7 +36,7 @@ export function ChapterTone() {
   return (
     <section id="tone" className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 pt-32 md:pt-48">
-        <ChapterMarker no="02" titleEn="Designing Tone" titleJa="トーンの設計" />
+        <ChapterMarker no="03" titleEn="Designing Tone" titleJa="トーンの設計" />
         <p className="mt-8 max-w-xl font-body text-base leading-loose text-gray-1 md:text-lg">
           モノトーンは「黒・白・グレーの配分」がすべて。ドレス7：カジュアル3を
           “明度”に翻訳すると、暗い面を約7割・明るい面を約3割。重心を下（暗）に

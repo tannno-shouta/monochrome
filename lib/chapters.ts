@@ -35,8 +35,15 @@ export const chapters: Chapter[] = [
     motion: "vertical-parallax",
   },
   {
-    id: "tone",
+    id: "ratio",
     no: "02",
+    titleEn: "Seven to Three",
+    titleJa: "7:3、ファッションの黄金比",
+    motion: "vertical-parallax",
+  },
+  {
+    id: "tone",
+    no: "03",
     titleEn: "Designing Tone",
     titleJa: "トーンの設計",
     motion: "pinned-horizontal",
@@ -50,7 +57,7 @@ export const chapters: Chapter[] = [
   },
   {
     id: "texture",
-    no: "03",
+    no: "04",
     titleEn: "Contrast by Texture",
     titleJa: "質感でコントラスト",
     motion: "diagonal-reveal",
@@ -61,13 +68,6 @@ export const chapters: Chapter[] = [
     titleEn: "Variations",
     titleJa: "斜めに流す",
     motion: "pinned-diagonal",
-  },
-  {
-    id: "silhouette",
-    no: "04",
-    titleEn: "The Silhouette Equation",
-    titleJa: "シルエットの方程式",
-    motion: "depth-scrub",
   },
   {
     id: "iroke",

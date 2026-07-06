@@ -47,7 +47,7 @@ export function ChapterRatio() {
           </p>
 
           <BlurText
-            text={"なぜ、7:3 が“整って見える”境界線なのか？"}
+            text={"なぜ、ドレス 7 : カジュアル 3 が“整って見える”黄金比なのか？"}
             className="font-heading text-xl leading-relaxed text-paper md:text-3xl md:leading-relaxed"
           />
 
@@ -81,10 +81,15 @@ export function ChapterRatio() {
 
           {/* ② 黄金比パート */}
           <p className="font-body text-base leading-loose text-paper/85 md:text-lg">
-            日本人は骨格も顔立ちも子供っぽく映りやすい。カジュアル 10 では幼稚に、5:5 は無難に、ドレス 10 は堅すぎに転ぶ。ドレス 7・カジュアル 3 だけが、&ldquo;洗練されたファッション + 抜け感&rdquo;のゾーンに入る。
+            日本人は骨格も顔立ちも子供っぽく映りやすい。カジュアル 10 では幼稚に、5:5 は無難に、ドレス 10 はスーツのように、私服としては堅すぎる。ドレス 7・カジュアル 3 だけが、&ldquo;洗練されたファッション + 抜け感&rdquo;のゾーンに入る。
           </p>
 
-          {/* ③ 補正パート（"顔面カジュアル値"の独自視点） */}
+          {/* ②-b 顔面ドレス値パート（イケメン/外国人がなぜ様になるか） */}
+          <p className="font-body text-base leading-loose text-paper/85 md:text-lg">
+            &ldquo;イケメンや外国人は何を着ても様になるな&rdquo;——そう感じたことがあるはずだ。これは、彼らの顔立ちや骨格そのものが&ldquo;ドレス側&rdquo;に加算されているから。素の状態で比率が 7 に寄っているため、何を着ても自然に洗練された印象になる。
+          </p>
+
+          {/* ③ 補正パート（"顔面カジュアル値"の独自視点。②-b と対称構造） */}
           <p className="font-body text-base leading-loose text-paper/85 md:text-lg">
             そして 30 代からは、肌のハリと目の輝きが少しずつ落ちる。これは&ldquo;顔面カジュアル値&rdquo;の上昇——何もしなくても、装いのカジュアル比が勝手に上がる。20 代のコーデをそのまま持ち越すと&ldquo;痛く&rdquo;見えるのは、服のせいではなく、この加算のせいだ。
           </p>

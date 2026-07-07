@@ -360,6 +360,13 @@ export function RatioScrubPlate() {
 
       {/* 建築図面風・寸法線ゲージ（ドレス値 0〜10、7 だけ二重目盛り＋▽） */}
       <div aria-hidden className="relative mt-7 h-9">
+        {/* 軸ラベル: 左端=カジュアル振り切り(0:10) / 右端=ドレス振り切り(10:0) */}
+        <span className="absolute -top-1 left-0 font-display text-[8px] leading-none tracking-[0.3em] text-paper/55">
+          CASUAL
+        </span>
+        <span className="absolute -top-1 right-0 font-display text-[8px] leading-none tracking-[0.3em] text-paper/55">
+          DRESS
+        </span>
         <span className="absolute left-0 right-0 top-3 h-px bg-paper/30" />
         {Array.from({ length: 11 }, (_, i) => (
           <span

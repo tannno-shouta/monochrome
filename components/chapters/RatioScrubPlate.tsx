@@ -33,10 +33,10 @@ type Frame = {
   detail: string;
 };
 
-// TODO: 仮画像。TapNow で同一モデル・同一ポーズの4状態を生成したら /images/ratio-*.jpg に差し替え
+// TapNow 生成の同一モデル4状態（2026-07-08 差し替え済み。顔=@ModelFace 参照）
 const FRAMES: Frame[] = [
   {
-    src: "/images/interlude-poster.jpg",
+    src: "/images/ratio-0.jpg",
     dress: 0,
     casual: 10,
     verdict: "幼く見える",
@@ -44,7 +44,7 @@ const FRAMES: Frame[] = [
       "パーカーにデニムにスニーカー——全身がカジュアル 10 に振り切ると、大人の顔立ちには“幼さ”だけが残る。“いい歳して学生みたい”と映ってしまう。",
   },
   {
-    src: "/images/gallery-poster.jpg",
+    src: "/images/ratio-5.jpg",
     dress: 5,
     casual: 5,
     verdict: "無難",
@@ -52,15 +52,15 @@ const FRAMES: Frame[] = [
       "ドレスとカジュアルが 5:5 で拮抗すると、間違いではないが、記憶にも残らない。すれ違っても何も思われない——“無難”とは、そういうことだ。",
   },
   {
-    src: "/images/gallery-portal.jpg",
+    src: "/images/ratio-7.jpg",
     dress: 7,
     casual: 3,
     verdict: "洗練＋抜け感 ✓",
     detail:
-      "スラックスと革靴で 7 を締め、白Tやスニーカーで 3 だけ抜く。ドレスの洗練にカジュアルの余裕が乗って、“あの人、おしゃれだな”のゾーンに入る。",
+      "チャコールのロングコートと革靴で 7 を締め、細身の黒デニムで 3 だけ抜く。ドレスの洗練にカジュアルの余裕が乗って、“あの人、おしゃれだな”のゾーンに入る。",
   },
   {
-    src: "/images/why.jpg",
+    src: "/images/ratio-10.jpg",
     dress: 10,
     casual: 0,
     verdict: "スーツに見える",
@@ -335,7 +335,7 @@ export function RatioScrubPlate() {
               <motion.img
                 key={f.src}
                 src={f.src}
-                alt={`ドレス${f.dress} : カジュアル${f.casual} の装い（仮画像）`}
+                alt={`ドレス${f.dress} : カジュアル${f.casual} の装い`}
                 draggable={false}
                 className="pointer-events-none absolute inset-0 h-full w-full object-cover"
                 style={{ opacity: opacities[i], scale: scales[i] }}

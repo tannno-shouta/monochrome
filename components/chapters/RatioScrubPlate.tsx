@@ -11,6 +11,7 @@ import {
   useTransform,
   type AnimationPlaybackControls,
 } from "framer-motion";
+import { DecryptedText } from "@/components/animations/DecryptedText";
 
 /**
  * RATIO SCRUB — 寸法線プレート（Chapter 02 の見せ場）。
@@ -29,14 +30,43 @@ type Frame = {
   dress: number;
   casual: number;
   verdict: string;
+  detail: string;
 };
 
 // TODO: 仮画像。TapNow で同一モデル・同一ポーズの4状態を生成したら /images/ratio-*.jpg に差し替え
 const FRAMES: Frame[] = [
-  { src: "/images/interlude-poster.jpg", dress: 0, casual: 10, verdict: "幼く見える" },
-  { src: "/images/gallery-poster.jpg", dress: 5, casual: 5, verdict: "無難" },
-  { src: "/images/gallery-portal.jpg", dress: 7, casual: 3, verdict: "洗練＋抜け感 ✓" },
-  { src: "/images/why.jpg", dress: 10, casual: 0, verdict: "スーツに見える" },
+  {
+    src: "/images/interlude-poster.jpg",
+    dress: 0,
+    casual: 10,
+    verdict: "幼く見える",
+    detail:
+      "パーカーにデニムにスニーカー——全身がカジュアル 10 に振り切ると、大人の顔立ちには“幼さ”だけが残る。“いい歳して学生みたい”と映ってしまう。",
+  },
+  {
+    src: "/images/gallery-poster.jpg",
+    dress: 5,
+    casual: 5,
+    verdict: "無難",
+    detail:
+      "ドレスとカジュアルが 5:5 で拮抗すると、間違いではないが、記憶にも残らない。すれ違っても何も思われない——“無難”とは、そういうことだ。",
+  },
+  {
+    src: "/images/gallery-portal.jpg",
+    dress: 7,
+    casual: 3,
+    verdict: "洗練＋抜け感 ✓",
+    detail:
+      "スラックスと革靴で 7 を締め、白Tやスニーカーで 3 だけ抜く。ドレスの洗練にカジュアルの余裕が乗って、“あの人、おしゃれだな”のゾーンに入る。",
+  },
+  {
+    src: "/images/why.jpg",
+    dress: 10,
+    casual: 0,
+    verdict: "スーツに見える",
+    detail:
+      "スラックスに革靴、ジャケットまで揃えてドレス 10。私服なのにスーツに見えて、“仕事帰りかな”で処理される。洗練ではなく、堅さだけが残る。",
+  },
 ];
 
 // ゾーン境界（ドレス値）。判定キャプションのパタつき防止にヒステリシスを併用
@@ -415,6 +445,18 @@ export function RatioScrubPlate() {
       >
         “{FRAMES[zone].dress}:{FRAMES[zone].casual} — {FRAMES[zone].verdict}”
       </motion.p>
+
+      {/* 判定ディテール（針の4状態で切替。reactbits DecryptedText 調整版で復号出現）
+          min-h は最長テキストぶんを予約してレイアウトジャンプを防ぐ */}
+      <div className="mt-4 min-h-[6em] md:min-h-[5em]">
+        <DecryptedText
+          key={zone}
+          text={FRAMES[zone].detail}
+          className={`font-body text-sm leading-relaxed md:text-base ${
+            zone === 2 ? "text-paper" : "text-paper/80"
+          }`}
+        />
+      </div>
     </figure>
   );
 }

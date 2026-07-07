@@ -118,6 +118,10 @@ export function RatioScrubPlate() {
   const [zone, setZone] = useState(0);
   const [glowing, setGlowing] = useState(false);
   const [hintGone, setHintGone] = useState(false);
+  // 初回演出の制御: introDone まで判定テキストを封印、ghost は“見えない指”のデモ表示
+  const [introDone, setIntroDone] = useState(false);
+  const [ghost, setGhost] = useState(false);
+  const ghostTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const reduceMotion = useReducedMotion();
   const inView = useInView(figRef, { once: true, amount: 0.45 });
@@ -155,7 +159,8 @@ export function RatioScrubPlate() {
       zoneRef.current = z;
       setZone(z);
       if (z === 2) {
-        // 7:3 到達の合図。内枠が一瞬灯る
+        // 7:3 到達の合図。内枠が一瞬灯り、初回はここで初めて判定テキストが解禁される
+        setIntroDone(true);
         setGlowing(true);
         if (glowTimer.current) clearTimeout(glowTimer.current);
         glowTimer.current = setTimeout(() => setGlowing(false), 700);
@@ -177,10 +182,32 @@ export function RatioScrubPlate() {
     });
   }, [inView, reduceMotion, t]);
 
+  // 7:3 着地後 0.7s で“見えない指”デモを一度だけ再生:
+  // ゴーストの円が針と同期して滑り、実際に比率が 7→6→7 と揺れて戻る＝触れることを実演で伝える。
+  // ユーザーが先に触っていたら（interacted）何もしない。markInteract で即キャンセル。
+  useEffect(() => {
+    if (!introDone || reduceMotion || interacted.current) return;
+    const starter = setTimeout(() => {
+      if (interacted.current) return;
+      setGhost(true);
+      animRef.current = animate(t, [7, 6, 7.15, 7], {
+        duration: 1.6,
+        times: [0, 0.45, 0.8, 1],
+        ease: "easeInOut",
+      });
+      ghostTimer.current = setTimeout(() => setGhost(false), 1700);
+    }, 700);
+    return () => {
+      clearTimeout(starter);
+      if (ghostTimer.current) clearTimeout(ghostTimer.current);
+    };
+  }, [introDone, reduceMotion, t]);
+
   useEffect(
     () => () => {
       animRef.current?.stop();
       if (glowTimer.current) clearTimeout(glowTimer.current);
+      if (ghostTimer.current) clearTimeout(ghostTimer.current);
     },
     [],
   );
@@ -219,6 +246,8 @@ export function RatioScrubPlate() {
           interacted.current = true;
           animRef.current?.stop();
           setHintGone(true);
+          setIntroDone(true);
+          setGhost(false);
         }
       }
       if (axisLock.current !== "x") return;
@@ -268,6 +297,8 @@ export function RatioScrubPlate() {
     interacted.current = true;
     animRef.current?.stop();
     if (!hintGone) setHintGone(true);
+    setIntroDone(true);
+    setGhost(false);
   }
 
   function nudge(target: number) {
@@ -374,6 +405,15 @@ export function RatioScrubPlate() {
           >
             ← DRAG →
           </motion.span>
+
+          {/* “見えない指”ゴースト（デモ中だけ針と同じ x を追従して滑る） */}
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute top-1/2 h-3 w-3 rounded-full border border-paper/80 bg-paper/25 [box-shadow:0_0_14px_rgba(255,255,255,0.4)]"
+            style={{ left: needleLeft, x: "-50%", y: "-50%" }}
+            animate={{ opacity: ghost ? 1 : 0 }}
+            transition={{ duration: 0.35 }}
+          />
         </div>
 
         {/* 内枠線。7:3 到達時だけ一瞬灯る */}
@@ -433,29 +473,35 @@ export function RatioScrubPlate() {
         />
       </div>
 
-      {/* 判定キャプション（状態が変わると静かに差し替え） */}
-      <motion.p
-        key={zone}
-        initial={{ opacity: 0, y: 2 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className={`mt-3 text-right font-display text-[10px] tracking-[0.3em] ${
-          zone === 2 ? "text-paper" : "text-paper/60"
-        }`}
-      >
-        “{FRAMES[zone].dress}:{FRAMES[zone].casual} — {FRAMES[zone].verdict}”
-      </motion.p>
+      {/* 判定キャプション（初回はオートパスが 7:3 に着地するまで封印。高さは常に確保） */}
+      <div className="mt-3 h-4">
+        {introDone && (
+          <motion.p
+            key={zone}
+            initial={{ opacity: 0, y: 2 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+            className={`text-right font-display text-[10px] tracking-[0.3em] ${
+              zone === 2 ? "text-paper" : "text-paper/60"
+            }`}
+          >
+            “{FRAMES[zone].dress}:{FRAMES[zone].casual} — {FRAMES[zone].verdict}”
+          </motion.p>
+        )}
+      </div>
 
       {/* 判定ディテール（針の4状態で切替。reactbits DecryptedText 調整版で復号出現）
-          min-h は最長テキストぶんを予約してレイアウトジャンプを防ぐ */}
+          min-h は最長テキストぶんを予約してレイアウトジャンプを防ぐ。初回は 7:3 着地までお預け */}
       <div className="mt-4 min-h-[6em] md:min-h-[5em]">
-        <DecryptedText
-          key={zone}
-          text={FRAMES[zone].detail}
-          className={`font-body text-sm leading-relaxed md:text-base ${
-            zone === 2 ? "text-paper" : "text-paper/80"
-          }`}
-        />
+        {introDone && (
+          <DecryptedText
+            key={zone}
+            text={FRAMES[zone].detail}
+            className={`font-body text-sm leading-relaxed md:text-base ${
+              zone === 2 ? "text-paper" : "text-paper/80"
+            }`}
+          />
+        )}
       </div>
     </figure>
   );

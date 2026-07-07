@@ -99,18 +99,18 @@ export function ChapterRatio() {
             だから、服の方でドレスを足す。シルバーアクセを一つ差す。革靴に替える。素材をウールに寄せる。黒・チャコール・濃紺の面積を増やす。スラックスで分かりやすくドレス寄りに。すべて&ldquo;ドレス側の加算&rdquo;として計算できる。足りない分だけ、意識して積み上げればいい。
           </p>
 
-          {/* 締め */}
+        </div>
+
+        {/* 画像（右・Chapter 01 のミラー）— RATIO SCRUB 寸法線プレート */}
+        <div className="order-2 flex flex-col gap-8">
+          <RatioScrubPlate />
+          {/* 締め（プレートで 7:3 を体感した直後に読ませる） */}
           <BlurText
             text={
               "ドレス 7・カジュアル 3 の設計を意識して着るだけで、街ですれ違いざまに“あの人、おしゃれだな”と一瞬思われるゾーンへ、確実に踏み込める。"
             }
             className="font-body text-base leading-loose text-paper md:text-lg"
           />
-        </div>
-
-        {/* 画像（右・Chapter 01 のミラー）— RATIO SCRUB 寸法線プレート */}
-        <div className="order-2">
-          <RatioScrubPlate />
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { BlurText } from "@/components/animations/BlurText";
-import { TiltedCard } from "@/components/animations/TiltedCard";
+import { RatioScrubPlate } from "@/components/chapters/RatioScrubPlate";
 
 /**
  * CHAPTER 02 — 7:3、ファッションの黄金比（チャコール地・左テキスト右画像）
@@ -108,18 +108,9 @@ export function ChapterRatio() {
           />
         </div>
 
-        {/* 画像（右・Chapter 01 のミラー） */}
+        {/* 画像（右・Chapter 01 のミラー）— RATIO SCRUB 寸法線プレート */}
         <div className="order-2">
-          <figure className="relative">
-            <div className="aspect-[3/4] w-full overflow-hidden bg-[#3a3a3a]">
-              {/* TODO: 専用画像 /images/ratio.jpg を用意したら差し替え */}
-              <TiltedCard imageSrc="/images/gallery-portal.jpg" altText="7:3 の黄金比を体現する装い" />
-            </div>
-            <span className="pointer-events-none absolute inset-3 border border-paper/25" />
-            <figcaption className="absolute -bottom-3 left-4 bg-[#525252] px-3 font-display text-[10px] tracking-[0.35em] text-paper/70">
-              PLATE 02 — 黄金比
-            </figcaption>
-          </figure>
+          <RatioScrubPlate />
         </div>
       </div>
     </section>

@@ -101,8 +101,8 @@ export function ChapterRatio() {
 
         </div>
 
-        {/* 画像（右・Chapter 01 のミラー）— RATIO SCRUB 寸法線プレート */}
-        <div className="order-2 flex flex-col gap-8">
+        {/* 画像（右・Chapter 01 のミラー）— RATIO SCRUB 寸法線プレート。PC ではやや下げて配置 */}
+        <div className="order-2 flex flex-col gap-8 md:translate-y-16">
           <RatioScrubPlate />
           {/* 締め（プレートで 7:3 を体感した直後に読ませる） */}
           <BlurText

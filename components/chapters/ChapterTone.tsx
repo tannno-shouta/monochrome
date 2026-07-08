@@ -38,9 +38,8 @@ export function ChapterTone() {
       <div className="mx-auto max-w-6xl px-6 pt-32 md:pt-48">
         <ChapterMarker no="03" titleEn="Designing Tone" titleJa="トーンの設計" />
         <p className="mt-8 max-w-xl font-body text-base leading-loose text-gray-1 md:text-lg">
-          モノトーンは「黒・白・グレーの配分」がすべて。ドレス7：カジュアル3を
-          “明度”に翻訳すると、暗い面を約7割・明るい面を約3割。重心を下（暗）に
-          置くと上半身が軽く見え、バランスが決まる。
+          モノトーンは「黒・チャコール・グレー・白の役割」を理解し、ドレス 7・カジュアル 3
+          を意識した生地との相関を考えることが洗練されたファッションの正解だ。
         </p>
       </div>
 

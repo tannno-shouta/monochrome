@@ -11,7 +11,7 @@ import {
   useTransform,
   type AnimationPlaybackControls,
 } from "framer-motion";
-import { DecryptedText } from "@/components/animations/DecryptedText";
+import { BlurText } from "@/components/animations/BlurText";
 
 /**
  * RATIO SCRUB — 寸法線プレート（Chapter 02 の見せ場）。
@@ -190,12 +190,13 @@ export function RatioScrubPlate() {
     const starter = setTimeout(() => {
       if (interacted.current) return;
       setGhost(true);
-      animRef.current = animate(t, [7, 6, 7.15, 7], {
-        duration: 1.6,
-        times: [0, 0.45, 0.8, 1],
+      // 2往復弱の揺れ（7:3 ゾーン内に収めて判定テキストは変えない）
+      animRef.current = animate(t, [7, 6, 7.2, 6.4, 7], {
+        duration: 2.6,
+        times: [0, 0.3, 0.55, 0.8, 1],
         ease: "easeInOut",
       });
-      ghostTimer.current = setTimeout(() => setGhost(false), 1700);
+      ghostTimer.current = setTimeout(() => setGhost(false), 2700);
     }, 700);
     return () => {
       clearTimeout(starter);
@@ -406,14 +407,18 @@ export function RatioScrubPlate() {
             ← DRAG →
           </motion.span>
 
-          {/* “見えない指”ゴースト（デモ中だけ針と同じ x を追従して滑る） */}
+          {/* “見えない指”ゴースト（デモ中だけ針と同じ x を追従して滑る。‹ ● › で方向も示す） */}
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute top-1/2 h-3 w-3 rounded-full border border-paper/80 bg-paper/25 [box-shadow:0_0_14px_rgba(255,255,255,0.4)]"
+            className="pointer-events-none absolute top-1/2 flex items-center gap-2 font-display text-base text-paper/90"
             style={{ left: needleLeft, x: "-50%", y: "-50%" }}
             animate={{ opacity: ghost ? 1 : 0 }}
             transition={{ duration: 0.35 }}
-          />
+          >
+            <span className="[text-shadow:0_0_10px_rgba(0,0,0,0.8)]">‹</span>
+            <span className="h-4 w-4 rounded-full border border-paper bg-paper/30 [box-shadow:0_0_18px_rgba(255,255,255,0.55)]" />
+            <span className="[text-shadow:0_0_10px_rgba(0,0,0,0.8)]">›</span>
+          </motion.span>
         </div>
 
         {/* 内枠線。7:3 到達時だけ一瞬灯る */}
@@ -490,13 +495,14 @@ export function RatioScrubPlate() {
         )}
       </div>
 
-      {/* 判定ディテール（針の4状態で切替。reactbits DecryptedText 調整版で復号出現）
+      {/* 判定ディテール（針の4状態で切替、BlurText でその場にピントが合う出現）
           min-h は最長テキストぶんを予約してレイアウトジャンプを防ぐ。初回は 7:3 着地までお預け */}
       <div className="mt-4 min-h-[6em] md:min-h-[5em]">
         {introDone && (
-          <DecryptedText
+          <BlurText
             key={zone}
             text={FRAMES[zone].detail}
+            delay={60}
             className={`font-body text-sm leading-relaxed md:text-base ${
               zone === 2 ? "text-paper" : "text-paper/80"
             }`}

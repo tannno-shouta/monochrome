@@ -32,8 +32,8 @@ export default function Home() {
           caption="色を消した世界に、残るのは構造だけ。"
         />
         <ChapterTexture />
-        <ChapterVariations />
         <ChapterIroke />
+        <ChapterVariations />
         <ChapterLookbook />
         <Closing />
       </main>

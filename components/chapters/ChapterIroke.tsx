@@ -62,7 +62,7 @@ export function ChapterIroke() {
       };
 
   return (
-    <section id="iroke" className="bg-bg py-32 md:py-48">
+    <section id="iroke" className="bg-[#525252] py-32 md:py-48">
       <div className="mx-auto grid max-w-6xl gap-16 px-6 md:grid-cols-2 md:items-center">
         {/* 左: 三首の注釈ダイアグラム */}
         <motion.figure
@@ -73,7 +73,7 @@ export function ChapterIroke() {
           className="relative mx-auto w-full max-w-sm"
         >
           {/* 人物プレースホルダ（縦長） */}
-          <div className="aspect-[3/5] w-full bg-gray-3">
+          <div className="aspect-[3/5] w-full bg-[#3a3a3a]">
             {/* TODO: /images/iroke.jpg を配置 */}
           </div>
 
@@ -86,16 +86,16 @@ export function ChapterIroke() {
             >
               <motion.span
                 variants={dot}
-                className="h-2 w-2 shrink-0 rounded-full bg-ink"
+                className="h-2 w-2 shrink-0 rounded-full bg-paper"
               />
               <motion.span
                 variants={lineV}
                 style={{ originX: 0 }}
-                className="h-px w-10 bg-ink"
+                className="h-px w-10 bg-paper/70"
               />
               <motion.span variants={labelV} className="ml-3 whitespace-nowrap">
-                <span className="font-heading text-base text-ink">{p.no}</span>
-                <span className="ml-2 font-display text-[10px] tracking-[0.3em] text-gray-2">
+                <span className="font-heading text-base text-paper">{p.no}</span>
+                <span className="ml-2 font-display text-[10px] tracking-[0.3em] text-paper/60">
                   {p.en}
                 </span>
               </motion.span>
@@ -109,22 +109,23 @@ export function ChapterIroke() {
             no="05"
             titleEn="The Art of Negative Space"
             titleJa="抜け感という色気"
+            inverted
           />
 
           <RevealText
             as="p"
             delay={0.1}
-            className="font-heading text-xl leading-relaxed text-ink md:text-3xl md:leading-relaxed"
+            className="font-heading text-xl leading-relaxed text-paper md:text-3xl md:leading-relaxed"
           >
             色気とは、意図してつくった“隙”だ。
           </RevealText>
 
-          <span className="h-px w-16 bg-gray-2" />
+          <span className="h-px w-16 bg-paper/40" />
 
           <RevealText
             as="p"
             delay={0.2}
-            className="font-body text-base leading-loose text-gray-1 md:text-lg"
+            className="font-body text-base leading-loose text-paper/85 md:text-lg"
           >
             きっちり締めた装いに、一点の余白を落とす。抜け感の王道は“三首”——
             首・手首・足首。最も視線が集まる細い場所をゆるめると、
@@ -132,14 +133,14 @@ export function ChapterIroke() {
           </RevealText>
 
           {/* 三首の内訳 */}
-          <ul className="flex flex-col divide-y divide-gray-3 border-y border-gray-3">
+          <ul className="flex flex-col divide-y divide-paper/20 border-y border-paper/20">
             {points.map((p, i) => (
               <RevealText key={p.en} as="li" delay={0.25 + i * 0.08}>
                 <div className="flex items-baseline gap-4 py-4">
-                  <span className="w-16 shrink-0 font-heading text-base text-ink">
+                  <span className="w-16 shrink-0 font-heading text-base text-paper">
                     {p.no}
                   </span>
-                  <p className="font-body text-sm leading-relaxed text-gray-1">
+                  <p className="font-body text-sm leading-relaxed text-paper/80">
                     {p.ja}
                   </p>
                 </div>
@@ -150,7 +151,7 @@ export function ChapterIroke() {
           <RevealText
             as="p"
             delay={0.5}
-            className="font-body text-sm leading-loose text-gray-2"
+            className="font-body text-sm leading-loose text-paper/60"
           >
             ——抜くのは全身で一〜二ヶ所まで。やり過ぎは色気ではなく“チャラさ”に転ぶ。
             そして抜け感は、清潔感の上にしか乗らない。

@@ -63,18 +63,18 @@ export const chapters: Chapter[] = [
     motion: "diagonal-reveal",
   },
   {
-    id: "variations",
-    no: "◇",
-    titleEn: "Variations",
-    titleJa: "斜めに流す",
-    motion: "pinned-diagonal",
-  },
-  {
     id: "iroke",
     no: "05",
     titleEn: "The Art of Negative Space",
     titleJa: "抜け感という色気",
     motion: "annotated",
+  },
+  {
+    id: "variations",
+    no: "◇",
+    titleEn: "Variations",
+    titleJa: "斜めに流す",
+    motion: "pinned-diagonal",
   },
   {
     id: "lookbook",

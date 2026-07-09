@@ -56,7 +56,7 @@ const MATERIALS: Material[] = [
   {
     label: "SWEAT",
     ja: "スウェット",
-    dress: 2,
+    dress: 0,
     copy: "楽さの代償に、比率を一気にカジュアルへ振る素材。パーカーを着るなら、残りすべてをドレスで締める覚悟で。",
   },
 ];

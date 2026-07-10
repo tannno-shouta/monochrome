@@ -14,23 +14,27 @@ const EASE = [0.16, 1, 0.3, 1] as const;
  * CHAPTER 05 — 抜け感という色気（髪・首元・腕の注釈ダイアグラム）
  * 色気＝意図してつくった“隙”。髪のほつれ・シャツの首元・腕まくりを図解する。
  */
+// dot = 実写上の部位座標（viewBox 60x100 = 3:5 プレートに一致）、label = 右外ラベルの縦位置(%)
 const points = [
   {
     no: "髪",
     en: "HAIR",
-    top: "12%",
+    dot: [33, 15],
+    label: 12,
     ja: "ベースはセンターパート。前髪を目尻あたりにほつれさせ、ちょうどいい抜け感で色気を構築。",
   },
   {
     no: "首元",
     en: "NECK",
-    top: "25%",
+    dot: [29.5, 27],
+    label: 26,
     ja: "ボタンは“1つ開け”。上まで閉めると堅苦しく、2つはだらしない。1つ開けが最も知的で、色気を構築。",
   },
   {
     no: "腕",
     en: "ARM",
-    top: "51%",
+    dot: [48, 43],
+    label: 48,
     ja: "肘より上には上げず、きっちり折りたたみすぎない無造作な腕まくり。大人の余裕で、色気を構築。",
   },
 ];
@@ -49,10 +53,10 @@ export function ChapterIroke() {
         visible: { scale: 1, opacity: 1, transition: { duration: 0.5, ease: EASE } },
       };
   const lineV: Variants = prefersReducedMotion
-    ? { hidden: { scaleX: 1 }, visible: { scaleX: 1 } }
+    ? { hidden: { pathLength: 1 }, visible: { pathLength: 1 } }
     : {
-        hidden: { scaleX: 0 },
-        visible: { scaleX: 1, transition: { duration: 0.8, ease: EASE } },
+        hidden: { pathLength: 0 },
+        visible: { pathLength: 1, transition: { duration: 0.8, ease: EASE } },
       };
   const labelV: Variants = prefersReducedMotion
     ? { hidden: { opacity: 1 }, visible: { opacity: 1 } }
@@ -82,29 +86,45 @@ export function ChapterIroke() {
             />
           </div>
 
-          {/* 注釈マーカー（首・手首・足首）— md+ のみオーバーレイ */}
+          {/* 注釈（点＝実写の部位に直打ち → 細線が右外のラベルへ伸びる）— md+ のみ */}
+          <svg
+            aria-hidden
+            viewBox="0 0 60 100"
+            className="pointer-events-none absolute inset-0 hidden h-full w-full overflow-visible md:block"
+          >
+            {points.map((p) => (
+              <g key={p.en}>
+                <motion.circle
+                  variants={dot}
+                  cx={p.dot[0]}
+                  cy={p.dot[1]}
+                  r={0.65}
+                  className="fill-paper"
+                />
+                <motion.line
+                  variants={lineV}
+                  x1={p.dot[0]}
+                  y1={p.dot[1]}
+                  x2={66}
+                  y2={p.label}
+                  strokeWidth={0.18}
+                  className="stroke-paper/70"
+                />
+              </g>
+            ))}
+          </svg>
           {points.map((p) => (
-            <div
+            <motion.span
               key={p.en}
-              className="absolute right-0 hidden translate-x-[calc(100%-1px)] items-center md:flex"
-              style={{ top: p.top }}
+              variants={labelV}
+              className="absolute hidden whitespace-nowrap md:block"
+              style={{ left: "110%", top: `calc(${p.label}% - 0.8em)` }}
             >
-              <motion.span
-                variants={dot}
-                className="h-2 w-2 shrink-0 rounded-full bg-paper"
-              />
-              <motion.span
-                variants={lineV}
-                style={{ originX: 0 }}
-                className="h-px w-10 bg-paper/70"
-              />
-              <motion.span variants={labelV} className="ml-3 whitespace-nowrap">
-                <span className="font-heading text-base text-paper">{p.no}</span>
-                <span className="ml-2 font-display text-[10px] tracking-[0.3em] text-paper/60">
-                  {p.en}
-                </span>
-              </motion.span>
-            </div>
+              <span className="font-heading text-base text-paper">{p.no}</span>
+              <span className="ml-2 font-display text-[10px] tracking-[0.3em] text-paper/60">
+                {p.en}
+              </span>
+            </motion.span>
           ))}
         </motion.figure>
 

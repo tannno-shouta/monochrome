@@ -146,13 +146,10 @@ export function ChapterIroke() {
             ))}
           </ul>
 
-          <RevealText
-            as="p"
-            delay={0.5}
-            className="font-body text-sm leading-loose text-paper/60"
-          >
+          {/* 章の締め（テーゼ）。スクロール検知の取りこぼしを避けるため出現アニメなしの常時表示 */}
+          <p className="font-body text-sm leading-loose text-paper/75 md:text-base">
             抜け感は、“清潔感”と“キレイめ”の土台の上にしか成り立たない。髪、首元、腕での抜け感の一工夫で、“大人の色気”を昇華できます。
-          </RevealText>
+          </p>
         </div>
       </div>
     </section>

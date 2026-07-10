@@ -18,19 +18,19 @@ const points = [
   {
     no: "髪",
     en: "HAIR",
-    top: "5%",
+    top: "12%",
     ja: "ベースはセンターパート。前髪を目尻あたりにほつれさせ、ちょうどいい抜け感で色気を構築。",
   },
   {
     no: "首元",
     en: "NECK",
-    top: "16%",
+    top: "25%",
     ja: "ボタンは“1つ開け”。上まで閉めると堅苦しく、2つはだらしない。1つ開けが最も知的で、色気を構築。",
   },
   {
     no: "腕",
     en: "ARM",
-    top: "48%",
+    top: "51%",
     ja: "肘より上には上げず、きっちり折りたたみすぎない無造作な腕まくり。大人の余裕で、色気を構築。",
   },
 ];
@@ -72,9 +72,14 @@ export function ChapterIroke() {
           viewport={{ once: true, margin: "-15% 0px" }}
           className="relative mx-auto w-full max-w-sm"
         >
-          {/* 人物プレースホルダ（縦長） */}
-          <div className="aspect-[3/5] w-full bg-[#3a3a3a]">
-            {/* TODO: /images/iroke.jpg を配置 */}
+          {/* 抜け感の実例（TapNow 生成: 首元1つ開け・腕まくり・前髪ほつれ） */}
+          <div className="aspect-[3/5] w-full overflow-hidden bg-[#3a3a3a]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/iroke.jpg"
+              alt="白シャツの首元を1つ開け、袖を肘下まで無造作にまくった抜け感の実例"
+              className="h-full w-full object-cover"
+            />
           </div>
 
           {/* 注釈マーカー（首・手首・足首）— md+ のみオーバーレイ */}

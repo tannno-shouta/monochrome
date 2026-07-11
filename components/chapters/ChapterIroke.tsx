@@ -104,7 +104,7 @@ export function ChapterIroke() {
                 {/* 点から斜めに立ち上がり、途中で折れて水平にラベルへ届く折れ線 */}
                 <motion.polyline
                   variants={lineV}
-                  points={`${p.dot[0]},${p.dot[1]} 52,${p.label} 66,${p.label}`}
+                  points={`${p.dot[0]},${p.dot[1]} 52,${p.label} 63,${p.label}`}
                   fill="none"
                   strokeWidth={0.18}
                   className="stroke-paper/70"
@@ -117,7 +117,7 @@ export function ChapterIroke() {
               key={p.en}
               variants={labelV}
               className="absolute hidden whitespace-nowrap md:block"
-              style={{ left: "110%", top: `calc(${p.label}% - 0.8em)` }}
+              style={{ left: "105%", top: `calc(${p.label}% - 0.8em)` }}
             >
               <span className="font-heading text-base text-paper">{p.no}</span>
               <span className="ml-2 font-display text-[10px] tracking-[0.3em] text-paper/60">

@@ -101,12 +101,11 @@ export function ChapterIroke() {
                   r={0.65}
                   className="fill-paper"
                 />
-                <motion.line
+                {/* 点から斜めに立ち上がり、途中で折れて水平にラベルへ届く折れ線 */}
+                <motion.polyline
                   variants={lineV}
-                  x1={p.dot[0]}
-                  y1={p.dot[1]}
-                  x2={66}
-                  y2={p.label}
+                  points={`${p.dot[0]},${p.dot[1]} 52,${p.label} 66,${p.label}`}
+                  fill="none"
                   strokeWidth={0.18}
                   className="stroke-paper/70"
                 />

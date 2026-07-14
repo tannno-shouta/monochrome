@@ -9,6 +9,7 @@ export type ScrollMotion =
   | "annotated" // 注釈ダイアグラム（三首）
   | "pinned-diagonal" // 斜めピン留めスクロール + 奥行き
   | "portal-depth" // 枠→動画フルスクリーンの奥行き portal（章間インタールード）
+  | "split-shift" // 左右分割の比率が反転するスプリット（8:2）
   | "minimal-reveal"; // テキスト主体ミニマル出現
 
 export interface Chapter {
@@ -70,6 +71,13 @@ export const chapters: Chapter[] = [
     motion: "annotated",
   },
   {
+    id: "eight-two",
+    no: "06",
+    titleEn: "Eight to Two",
+    titleJa: "8:2、大人の黄金比",
+    motion: "split-shift",
+  },
+  {
     id: "variations",
     no: "◇",
     titleEn: "Variations",
@@ -78,7 +86,7 @@ export const chapters: Chapter[] = [
   },
   {
     id: "lookbook",
-    no: "06",
+    no: "07",
     titleEn: "Lookbook",
     titleJa: "ルックブック",
     motion: "vertical-sticky",

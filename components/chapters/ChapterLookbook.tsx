@@ -35,7 +35,7 @@ export function ChapterLookbook() {
       <div className="mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-[1fr_1.5fr]">
         {/* 左: sticky 解説 */}
         <div className="flex flex-col gap-8 md:sticky md:top-28 md:h-fit">
-          <ChapterMarker no="06" titleEn="Lookbook" titleJa="ルックブック" />
+          <ChapterMarker no="07" titleEn="Lookbook" titleJa="ルックブック" />
           <p className="font-body text-base leading-loose text-gray-1 md:text-lg">
             理論を実例に。系統を一つに統一すれば、モノトーンは“制服”ではなく
             “様式”になる。

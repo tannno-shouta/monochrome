@@ -90,7 +90,7 @@ export function ChapterEightTwo() {
   const fadeIn = { duration: 0.8, delay: adult ? 0.7 : 0 };
 
   return (
-    <section id="eight-two" className="bg-bg py-32 md:py-48">
+    <section id="eight-two" className="bg-gray-3 py-32 md:py-48">
       <div ref={ref} className="mx-auto max-w-6xl px-6">
         <ChapterMarker no="06" titleEn="Eight to Two" titleJa="8:2、大人の黄金比" />
         <p className="mt-8 max-w-xl font-heading text-xl leading-relaxed text-ink md:text-3xl md:leading-relaxed">

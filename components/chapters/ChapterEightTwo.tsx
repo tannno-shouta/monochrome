@@ -77,15 +77,26 @@ export function ChapterEightTwo() {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, amount: 0.3 });
   const reduceMotion = useReducedMotion();
-  const [flipped, setFlipped] = useState(false);
-  // reduced-motion では進入と同時に反転済み状態へ（大きなレイアウト移動を見せない）
-  const adult = reduceMotion ? inView : flipped;
+  const [adult, setAdult] = useState(false);
+  // ユーザーが一度でもトグルしたら、初回オートフリップは発火させない
+  const interacted = useRef(false);
 
   useEffect(() => {
-    if (!inView || reduceMotion) return;
-    const timer = setTimeout(() => setFlipped(true), FLIP_DELAY_MS);
+    if (!inView) return;
+    const timer = setTimeout(
+      () => {
+        if (!interacted.current) setAdult(true);
+      },
+      // reduced-motion では進入と同時に反転済み状態へ（大きなレイアウト移動を見せない）
+      reduceMotion ? 0 : FLIP_DELAY_MS,
+    );
     return () => clearTimeout(timer);
   }, [inView, reduceMotion]);
+
+  function toggle(toAdult: boolean) {
+    interacted.current = true;
+    setAdult(toAdult);
+  }
 
   const panelT = reduceMotion ? { duration: 0 } : { duration: 1.4, ease: EASE };
   const fadeIn = { duration: 0.8, delay: adult ? 0.7 : 0 };
@@ -107,6 +118,15 @@ export function ChapterEightTwo() {
             animate={{ width: adult ? "80%" : "20%" }}
             transition={panelT}
           >
+            {/* 縮んでいる間はクリックで社会性の面を開ける */}
+            {!adult && (
+              <button
+                type="button"
+                aria-label="社会性 8 の面を開く"
+                onClick={() => toggle(true)}
+                className="absolute inset-0 z-10 cursor-pointer bg-transparent transition-colors hover:bg-ink/5"
+              />
+            )}
             {/* youth: 縦の控えめラベル */}
             <span className="pointer-events-none absolute inset-0 flex items-center justify-center">
               <motion.span
@@ -137,6 +157,15 @@ export function ChapterEightTwo() {
             animate={{ width: adult ? "20%" : "80%" }}
             transition={panelT}
           >
+            {/* 2割の帯になっている間はクリックで自我 8 割（20代）に戻せる */}
+            {adult && (
+              <button
+                type="button"
+                aria-label="自我 8 割（20代）の状態に戻す"
+                onClick={() => toggle(false)}
+                className="absolute inset-0 z-10 cursor-pointer bg-transparent transition-colors hover:bg-paper/10"
+              />
+            )}
             {/* youth: 20代の喧騒 */}
             <motion.div
               animate={{ opacity: adult ? 0 : 1 }}
@@ -177,8 +206,12 @@ export function ChapterEightTwo() {
 
         {/* ===== SP: 比率バー + 通常フロー ===== */}
         <div className="mt-12 md:hidden">
+          {/* タップで 20代⇔30代 を行き来できる */}
           <div className="flex h-9 overflow-hidden border border-ink/15">
-            <motion.div
+            <motion.button
+              type="button"
+              aria-label="社会性 8 の状態にする"
+              onClick={() => toggle(true)}
               initial={false}
               animate={{ width: adult ? "80%" : "20%" }}
               transition={panelT}
@@ -187,8 +220,11 @@ export function ChapterEightTwo() {
               <span className="whitespace-nowrap font-display text-[10px] tracking-[0.3em] text-ink/70">
                 社会性 {adult ? "8" : "2"}
               </span>
-            </motion.div>
-            <motion.div
+            </motion.button>
+            <motion.button
+              type="button"
+              aria-label="自我 8 割（20代）の状態に戻す"
+              onClick={() => toggle(false)}
               initial={false}
               animate={{ width: adult ? "20%" : "80%" }}
               transition={panelT}
@@ -197,7 +233,7 @@ export function ChapterEightTwo() {
               <span className="whitespace-nowrap font-display text-[10px] tracking-[0.3em] text-paper/80">
                 自我 {adult ? "2" : "8"}
               </span>
-            </motion.div>
+            </motion.button>
           </div>
           <motion.p
             key={adult ? "adult" : "youth"}

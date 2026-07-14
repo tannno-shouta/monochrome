@@ -6,12 +6,12 @@ import { PinnedDiagonal } from "@/components/scroll/PinnedDiagonal";
  * モノトーン作例カードを右上がりに傾いたリボンで斜めに流す（右上に流れる）。
  */
 const cards = [
-  { label: "ALL BLACK", ja: "黒で統一し、白を一点だけ。素材違いで“喪服”を回避。" },
-  { label: "GRAY GRADATION", ja: "濃淡グレーの重ねでIラインを強調。" },
-  { label: "WHITE × BLACK", ja: "王道2トーン。差は色でなく素材でつける。" },
-  { label: "CHARCOAL SET", ja: "セットアップで社会性8を担保。自我は足元に。" },
-  { label: "MONO DENIM", ja: "色落ちデニムで抜けを一点。崩しすぎない。" },
-  { label: "TONAL KNIT", ja: "同系ニットの陰影で、静かな立体感。" },
+  { label: "ALL BLACK", ja: "黒で統一し、白を一点だけ。ウールとレザーの質感差で“喪服”を回避。" },
+  { label: "GRAY GRADATION", ja: "濃淡グレーの重ねでIラインを強調。“少しだけ抜きたい”日の正解。" },
+  { label: "WHITE × BLACK", ja: "王道2トーン。差は色でなく、素材の座標でつける。" },
+  { label: "CHARCOAL SET", ja: "チャコールのセットアップで社会性8を担保。自我2はスニーカーとアクセに。" },
+  { label: "MONO DENIM", ja: "黒のストレートデニムに7:3の“3”を担わせる。崩しすぎない抜け感。" },
+  { label: "TONAL KNIT", ja: "同系ニットの陰影で、静かな立体感。艶は揃えて、一点だけズラす。" },
 ];
 
 export function ChapterVariations() {
@@ -24,9 +24,7 @@ export function ChapterVariations() {
           titleJa="斜めに流す、組み合わせの幅"
         />
         <p className="mt-8 max-w-xl font-body text-base leading-loose text-gray-1 md:text-lg">
-          同じ無彩色でも、配分と質感で表情は変わる。系統を一つに絞り、自我は2割まで。
-          そして全身で一〜二ヶ所だけ“抜く”——三首を見せ、袖をまくる。締めた中の
-          一点の隙が、色気になる。
+          同じ無彩色でも、配分と質感で表情は変わる。ドレス7:カジュアル3を軸に、トーンの役割と素材の座標を組み替える——仕上げは髪・首元・腕の一工夫。締めた中の一点の隙が、色気になる。
         </p>
       </div>
 

@@ -3,29 +3,29 @@ import { ParallaxDepth } from "@/components/scroll/ParallaxDepth";
 import { RevealText } from "@/components/scroll/RevealText";
 
 /**
- * CHAPTER 05 — ルックブック（縦グリッド + スティッキー）
+ * CHAPTER 07 — ルックブック（縦グリッド + スティッキー）
  * 左に解説を sticky 固定、右に作例を縦に流す。特大インデックス＋EN/JP＋パララックス。
  */
 const looks = [
   {
     no: "01",
     en: "All Black, One White",
-    ja: "黒で艶を揃え、白スニーカーで一点だけ抜く。素材は3種類で差を。",
+    ja: "黒で艶を揃え、白スニーカーで一点だけ抜く。素材は3種類で立体を。",
   },
   {
     no: "02",
     en: "Tonal Charcoal",
-    ja: "近い黒〜グレーで濃淡を揃える。リブやワッフルで表情を足す。",
+    ja: "黒〜チャコールの濃淡で、品格はそのまま一段だけ軽く。リブの畝で表情を足す。",
   },
   {
     no: "03",
     en: "The Classic Two-Tone",
-    ja: "白シャツ × 黒スラックス。差は素材と仕立て、襟を少し抜いて色気を。",
+    ja: "白シャツ × 黒スラックス。差は素材と仕立て。首元は“1つ開け”で色気を。",
   },
   {
     no: "04",
     en: "Gray, In the Lead",
-    ja: "グレーコートを主役に。Iラインで縦を強調し、足首を見せて抜く。",
+    ja: "グレーのロングコートを主役に、Iラインで縦を強調。革靴の艶で“7”を締める。",
   },
 ];
 
@@ -37,8 +37,7 @@ export function ChapterLookbook() {
         <div className="flex flex-col gap-8 md:sticky md:top-28 md:h-fit">
           <ChapterMarker no="07" titleEn="Lookbook" titleJa="ルックブック" />
           <p className="font-body text-base leading-loose text-gray-1 md:text-lg">
-            理論を実例に。系統を一つに統一すれば、モノトーンは“制服”ではなく
-            “様式”になる。
+            理論を実例に。7:3、トーンの役割、素材の座標、抜け感——ここまでの章をぜんぶ、一着に落とす。系統を一つに統一すれば、モノトーンは“制服”ではなく“様式”になる。
           </p>
           <div className="flex items-center gap-4">
             <span className="h-px w-12 bg-gray-2" />

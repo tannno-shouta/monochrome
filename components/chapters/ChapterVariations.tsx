@@ -6,12 +6,36 @@ import { PinnedDiagonal } from "@/components/scroll/PinnedDiagonal";
  * モノトーン作例カードを右上がりに傾いたリボンで斜めに流す（右上に流れる）。
  */
 const cards = [
-  { label: "ALL BLACK", ja: "黒で統一し、白を一点だけ。ウールとレザーの質感差で“喪服”を回避。" },
-  { label: "GRAY GRADATION", ja: "濃淡グレーの重ねでIラインを強調。“少しだけ抜きたい”日の正解。" },
-  { label: "WHITE × BLACK", ja: "王道2トーン。差は色でなく、素材の座標でつける。" },
-  { label: "CHARCOAL SET", ja: "チャコールのセットアップで社会性8を担保。自我2はスニーカーとアクセに。" },
-  { label: "MONO DENIM", ja: "黒のストレートデニムに7:3の“3”を担わせる。崩しすぎない抜け感。" },
-  { label: "TONAL KNIT", ja: "同系ニットの陰影で、静かな立体感。艶は揃えて、一点だけズラす。" },
+  {
+    src: "/images/var-1.jpg",
+    label: "ALL BLACK",
+    ja: "黒で統一し、レザー・ニット・ウールの質感差で“喪服”を回避。メガネは2割のスパイス。",
+  },
+  {
+    src: "/images/var-2.jpg",
+    label: "GRAY GRADATION",
+    ja: "濃淡グレーの重ねでIラインを強調。“少しだけ抜きたい”日の正解。",
+  },
+  {
+    src: "/images/var-3.jpg",
+    label: "WHITE × BLACK",
+    ja: "王道2トーン。差は色でなく、素材の座標でつける。",
+  },
+  {
+    src: "/images/var-4.jpg",
+    label: "CHARCOAL LAYERED",
+    ja: "ウォッシュドスエードのトレンチにフーディを重ねる。チャコールの質感グラデーション、チェーンは2割の自我。",
+  },
+  {
+    src: "/images/var-5.jpg",
+    label: "LEATHER × DENIM",
+    ja: "デザインが勝てば、革はカジュアルへ振れる。裾の白一線で抜けを一点。",
+  },
+  {
+    src: "/images/var-6.jpg",
+    label: "TONAL KNIT",
+    ja: "同系ニットの陰影で、静かな立体感。艶は揃えて、一点だけズラす。",
+  },
 ];
 
 export function ChapterVariations() {
@@ -32,8 +56,15 @@ export function ChapterVariations() {
         {cards.map((c) => (
           <article key={c.label} className="flex shrink-0 flex-col gap-4">
             {/* 高さを vh で固定し、画像＋テキストが画面内に収まるようにする */}
-            {/* TODO: /images/var-*.jpg を配置 */}
-            <div className="aspect-[4/5] h-[42vh] bg-gray-3 md:h-[48vh]" />
+            <div className="aspect-[4/5] h-[42vh] overflow-hidden bg-gray-3 md:h-[48vh]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={c.src}
+                alt={`${c.label} の作例コーデ`}
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
+            </div>
             <div className="flex flex-col gap-1">
               <span className="font-display text-lg tracking-[0.25em] text-ink">
                 {c.label}

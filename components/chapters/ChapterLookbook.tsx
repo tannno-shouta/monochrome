@@ -9,23 +9,27 @@ import { RevealText } from "@/components/scroll/RevealText";
 const looks = [
   {
     no: "01",
+    src: "/images/look-01.jpg",
     en: "All Black, One White",
-    ja: "黒で艶を揃え、白スニーカーで一点だけ抜く。素材は3種類で立体を。",
+    ja: "マットな黒ハーフジップで艶を揃え、裾から白を一線だけ。黒カーゴで重心を落とす。",
   },
   {
     no: "02",
+    src: "/images/look-02.jpg",
     en: "Tonal Charcoal",
-    ja: "黒〜チャコールの濃淡で、品格はそのまま一段だけ軽く。リブの畝で表情を足す。",
+    ja: "チャコールのロングコートにウォッシュドシャツの濃淡を重ねる。素材の階調が、単色を豊かにする。",
   },
   {
     no: "03",
-    en: "The Classic Two-Tone",
-    ja: "白シャツ × 黒スラックス。差は素材と仕立て。首元は“1つ開け”で色気を。",
+    src: "/images/look-03.jpg",
+    en: "Dress, Bent Urban",
+    ja: "第一ボタンまで閉じた黒シャツに、曲線パネルのナイロンパンツ。ドレスな要素を都会的にズラし、サングラスは2割のスパイス。",
   },
   {
     no: "04",
-    en: "Gray, In the Lead",
-    ja: "グレーのロングコートを主役に、Iラインで縦を強調。革靴の艶で“7”を締める。",
+    src: "/images/look-04.jpg",
+    en: "Greige, at Ease",
+    ja: "グレージュの開襟シャツをゆるく羽織り、ワイドスラックスで品を保つ。首元と袖の抜けが、余裕をつくる。",
   },
 ];
 
@@ -58,8 +62,15 @@ export function ChapterLookbook() {
               >
                 <div className="overflow-hidden">
                   <ParallaxDepth speed={40}>
-                    {/* TODO: /images/look-XX.jpg を配置 */}
-                    <div className="aspect-[4/5] w-full bg-gray-3" />
+                    <div className="aspect-[4/5] w-full overflow-hidden bg-gray-3">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={look.src}
+                        alt={`${look.en} の作例コーデ`}
+                        loading="lazy"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
                   </ParallaxDepth>
                 </div>
                 <figcaption className="flex items-start gap-5 border-t border-gray-3 pt-4">

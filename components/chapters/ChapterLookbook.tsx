@@ -62,7 +62,7 @@ export function ChapterLookbook() {
               >
                 <div className="overflow-hidden">
                   <ParallaxDepth speed={40}>
-                    <div className="aspect-[4/5] w-full overflow-hidden bg-gray-3">
+                    <div className="aspect-[3/4] w-full overflow-hidden bg-gray-3">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={look.src}

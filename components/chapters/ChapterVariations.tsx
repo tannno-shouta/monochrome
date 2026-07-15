@@ -54,9 +54,12 @@ export function ChapterVariations() {
 
       <PinnedDiagonal className="mt-16" tilt={-8}>
         {cards.map((c) => (
-          <article key={c.label} className="flex shrink-0 flex-col gap-4">
-            {/* 高さを vh で固定し、画像＋テキストが画面内に収まるようにする */}
-            <div className="aspect-[4/5] h-[42vh] overflow-hidden bg-gray-3 md:h-[48vh]">
+          <article
+            key={c.label}
+            className="flex w-[calc(42vh*3/4)] shrink-0 flex-col gap-4 md:w-[calc(48vh*3/4)]"
+          >
+            {/* 記事幅＝画像幅（3:4）に固定。キャプション長で枠が伸びて画像が切れるのを防ぐ */}
+            <div className="h-[42vh] w-full overflow-hidden bg-gray-3 md:h-[48vh]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={c.src}

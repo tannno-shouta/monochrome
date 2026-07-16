@@ -32,7 +32,7 @@ export const chapters: Chapter[] = [
     id: "silhouette",
     no: "❖",
     titleEn: "Silhouette",
-    titleJa: "おしゃれは、線から",
+    titleJa: "おしゃれは、ラインから",
     motion: "annotated",
   },
   {

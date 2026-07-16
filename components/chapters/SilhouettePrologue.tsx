@@ -54,7 +54,7 @@ export function SilhouettePrologue() {
         </RevealText>
 
         <BlurText
-          text="おしゃれは、服より先に、“線”で決まる。"
+          text="おしゃれは、服より先に、“ライン”で決まる。"
           className="font-heading text-2xl leading-relaxed text-paper md:text-4xl md:leading-relaxed"
         />
 
@@ -63,7 +63,7 @@ export function SilhouettePrologue() {
           delay={0.15}
           className="max-w-xl font-body text-base leading-loose text-paper/80 md:text-lg"
         >
-          全身のシルエットは I・A・Y——たった3本の線に集約される。まずはこの線を、動きで覚える。
+          全身のシルエットは I・A・Y——たった3本のラインに集約される。まずはこのラインを、動きで覚える。
         </RevealText>
 
         {/* I / A / Y の一筆書き図解 */}

@@ -32,7 +32,7 @@ export default function Home() {
           poster="/images/interlude-poster.jpg"
           label="モノトーンの世界に没入するインタールード映像"
           eyebrow="Step Inside"
-          caption="色を消した世界に、残るのは構造だけ。"
+          caption="Beyond this point, the details take over."
         />
         <ChapterTexture />
         <ChapterIroke />

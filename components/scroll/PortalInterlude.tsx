@@ -186,7 +186,7 @@ export function PortalInterlude({
         />
         {caption && (
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-            <p className="max-w-2xl font-heading text-2xl text-paper md:text-4xl">
+            <p className="max-w-2xl font-display text-2xl tracking-wide text-gray-1 md:text-4xl">
               {caption}
             </p>
           </div>
@@ -311,16 +311,16 @@ export function PortalInterlude({
               </svg>
 
               {/* ブランド名・ナンバー */}
-              <span className="absolute inset-x-0 top-[16%] text-center font-display text-[11px] tracking-[0.4em] text-paper">
+              <span className="absolute inset-x-0 top-[16%] text-center font-display text-[11px] tracking-[0.4em] text-gray-1">
                 {eyebrow ?? "MONOCHROME"}
               </span>
-              <span className="absolute inset-x-0 top-[22%] text-center font-display text-[9px] tracking-[0.3em] text-gray-3">
+              <span className="absolute inset-x-0 top-[22%] text-center font-display text-[9px] tracking-[0.3em] text-gray-1">
                 No. 01
               </span>
 
               {/* 下部キャプション */}
               {caption && (
-                <p className="absolute inset-x-5 bottom-6 text-center font-heading text-sm leading-snug text-paper md:text-base">
+                <p className="absolute inset-x-5 bottom-6 text-center font-display text-sm tracking-wide leading-snug text-gray-1 md:text-base">
                   {caption}
                 </p>
               )}

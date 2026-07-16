@@ -1,6 +1,7 @@
 import { ProgressRail } from "@/components/layout/ProgressRail";
 import { Footer } from "@/components/layout/Footer";
 import { IntroPortal3D } from "@/components/intro/IntroPortal3D";
+import { SilhouettePrologue } from "@/components/chapters/SilhouettePrologue";
 import { SilhouetteGallery } from "@/components/chapters/SilhouetteGallery";
 import { ChapterWhy } from "@/components/chapters/ChapterWhy";
 import { ChapterRatio } from "@/components/chapters/ChapterRatio";
@@ -19,6 +20,7 @@ export default function Home() {
       <ProgressRail />
       <main>
         <IntroPortal3D />
+        <SilhouettePrologue />
         <SilhouetteGallery />
         <ChapterWhy />
         <ChapterRatio />

@@ -29,6 +29,13 @@ export const chapters: Chapter[] = [
     motion: "depth-scrub",
   },
   {
+    id: "silhouette",
+    no: "❖",
+    titleEn: "Silhouette",
+    titleJa: "おしゃれは、線から",
+    motion: "annotated",
+  },
+  {
     id: "why",
     no: "01",
     titleEn: "The Three Beauties",

@@ -36,10 +36,9 @@ export function ChapterTone() {
   return (
     <section id="tone" className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 pt-32 md:pt-48">
-        <ChapterMarker no="03" titleEn="Designing Tone" titleJa="トーンの設計" />
+        <ChapterMarker no="03" titleEn="The Four Tones" titleJa="4つのトーン、4つの配役" />
         <p className="mt-8 max-w-xl font-body text-base leading-loose text-gray-1 md:text-lg">
-          モノトーンは「黒・チャコール・グレー・白の役割」を理解し、ドレス 7・カジュアル 3
-          を意識した生地との相関を考えることが洗練されたファッションの正解だ。
+          黒は主役、チャコールは品、グレーは抜け、白は余白——同じ無彩色でも、配役はまるで違う。生地の質感まで含めてキャスティングできたとき、7:3 は“洗練”として完成する。
         </p>
       </div>
 

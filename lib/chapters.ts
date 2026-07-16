@@ -52,8 +52,8 @@ export const chapters: Chapter[] = [
   {
     id: "tone",
     no: "03",
-    titleEn: "Designing Tone",
-    titleJa: "トーンの設計",
+    titleEn: "The Four Tones",
+    titleJa: "4つのトーン、4つの配役",
     motion: "pinned-horizontal",
   },
   {

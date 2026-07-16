@@ -186,8 +186,10 @@ export function PortalInterlude({
         />
         {caption && (
           <div className="absolute inset-0 flex items-center justify-center px-6 text-center">
-            <p className="max-w-2xl font-display text-2xl tracking-wide text-gray-1 md:text-4xl">
-              {caption}
+            <p className="max-w-2xl font-display text-2xl tracking-wide text-gray-3 md:text-4xl">
+              <span className="inline-block rounded-[2px] bg-ink/40 px-5 py-2 backdrop-blur-[2px]">
+                {caption}
+              </span>
             </p>
           </div>
         )}
@@ -284,15 +286,6 @@ export function PortalInterlude({
                   strokeWidth={1.5}
                   vectorEffect="non-scaling-stroke"
                 />
-                <circle
-                  cx={65}
-                  cy={16}
-                  r={5}
-                  fill="none"
-                  stroke="#f5f4f2"
-                  strokeWidth={1.5}
-                  vectorEffect="non-scaling-stroke"
-                />
               </svg>
 
               {/* 吊り紐（タグの上にぶら下がる） */}
@@ -311,17 +304,23 @@ export function PortalInterlude({
               </svg>
 
               {/* ブランド名・ナンバー */}
-              <span className="absolute inset-x-0 top-[16%] text-center font-display text-[11px] tracking-[0.4em] text-gray-1">
-                {eyebrow ?? "MONOCHROME"}
+              <span className="absolute inset-x-0 top-[4%] text-center font-display text-[11px] tracking-[0.4em] text-gray-3">
+                <span className="inline-block rounded-[2px] bg-ink/40 px-3 py-1 backdrop-blur-[2px]">
+                  {eyebrow ?? "MONOCHROME"}
+                </span>
               </span>
-              <span className="absolute inset-x-0 top-[22%] text-center font-display text-[9px] tracking-[0.3em] text-gray-1">
-                No. 01
+              <span className="absolute inset-x-0 top-[9%] text-center font-display text-[9px] tracking-[0.3em] text-gray-3">
+                <span className="inline-block rounded-[2px] bg-ink/40 px-2.5 py-0.5 backdrop-blur-[2px]">
+                  No. 01
+                </span>
               </span>
 
               {/* 下部キャプション */}
               {caption && (
-                <p className="absolute inset-x-5 bottom-6 text-center font-display text-sm tracking-wide leading-snug text-gray-1 md:text-base">
-                  {caption}
+                <p className="absolute inset-x-5 bottom-6 text-center font-display text-sm tracking-wide leading-snug text-gray-3 md:text-base">
+                  <span className="inline-block rounded-[2px] bg-ink/40 px-4 py-1.5 backdrop-blur-[2px]">
+                    {caption}
+                  </span>
                 </p>
               )}
             </motion.div>

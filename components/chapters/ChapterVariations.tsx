@@ -48,7 +48,7 @@ export function ChapterVariations() {
           titleJa="斜めに流す、組み合わせの幅"
         />
         <p className="mt-8 max-w-xl font-body text-base leading-loose text-gray-1 md:text-lg">
-          同じ無彩色でも、配分と質感で表情は変わる。ドレス7:カジュアル3を軸に、トーンの役割と素材の座標を組み替える——仕上げは髪・首元・腕の一工夫。締めた中の一点の隙が、色気になる。
+          同じ無彩色でも、配分と質感で表情は変わる。ドレス7:カジュアル3を軸に、トーンの役割と素材の座標を組み替える——仕上げは髪・首元・腕の一工夫。洗練された装いの中の一点の隙が、色気になる。
         </p>
       </div>
 

@@ -41,7 +41,7 @@ export function ChapterLookbook() {
         <div className="flex flex-col gap-8 md:sticky md:top-28 md:h-fit">
           <ChapterMarker no="07" titleEn="Lookbook" titleJa="ルックブック" />
           <p className="font-body text-base leading-loose text-gray-1 md:text-lg">
-            理論を実例に。7:3の黄金比、モノトーン、素材の座標、抜け感、8:2のちょうどよさ——ここまでの章の知識を、一着に落とす。“洗練された洒落た大人へ”
+            理論を実例に。7:3の黄金比、モノトーン、素材の座標、抜け感、8:2のちょうどよさ——ここまでの章の知識を、“洗練された洒落た大人へ”に落とす。
           </p>
           <div className="flex items-center gap-4">
             <span className="h-px w-12 bg-gray-2" />

@@ -18,8 +18,8 @@ const cards = [
   },
   {
     src: "/images/var-3.jpg",
-    label: "WHITE × BLACK",
-    ja: "王道2トーン。差は色でなく、素材の座標でつける。",
+    label: "WHITE × DENIM",
+    ja: "WHITEを使った王道コーデ。シンプルなアクセサリーで差別化を。",
   },
   {
     src: "/images/var-4.jpg",
@@ -34,7 +34,7 @@ const cards = [
   {
     src: "/images/var-6.jpg",
     label: "TONAL KNIT",
-    ja: "同系ニットの陰影で、静かな立体感。艶は揃えて、一点だけズラす。",
+    ja: "グレーニットの都会的な印象を、黒のパンツで締める。大人の余裕を感じさせるモノトーンコーデ。",
   },
 ];
 

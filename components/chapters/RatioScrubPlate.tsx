@@ -495,6 +495,13 @@ export function RatioScrubPlate() {
         )}
       </div>
 
+      {/* 検索/AIクローラー・スクリーンリーダー向けの静的全文（視覚上は非表示、演出には不干渉） */}
+      <div className="sr-only">
+        {FRAMES.map((f) => (
+          <p key={f.src}>{`ドレス${f.dress}:カジュアル${f.casual} — ${f.verdict}。${f.detail}`}</p>
+        ))}
+      </div>
+
       {/* 判定ディテール（針の4状態で切替、BlurText でその場にピントが合う出現）
           min-h は最長テキストぶんを予約してレイアウトジャンプを防ぐ。初回は 7:3 着地までお預け */}
       <div className="mt-4 min-h-[6em] md:min-h-[5em]">

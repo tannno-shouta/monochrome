@@ -1,0 +1,25 @@
+# MONOCHROME
+
+> モノトーンコーデを「センスではなくロジック」として解説する、スクロール体験型の読み物メディア／ポートフォリオサイト。黒・チャコール・グレー・白の無彩色だけで“洗練”をつくる方法を、比率・トーン・素材・抜け感の理論で章立て解説する。企画・コピー・デザイン・実装・AI画像生成まで Shota Tanno の個人制作。
+
+## 章構成と理論の要点
+
+- PROLOGUE — SILHOUETTE: おしゃれは服より先に“ライン”で決まる。全身のシルエットは I・A・Y の3本のラインに集約される
+- 01 The Three Beauties: 無彩色の三つの美（シルエット・普遍性・素材）
+- 02 Seven to Three: ドレス7:カジュアル3が“ファッションの黄金比”。DRESS=スラックス/Yシャツ/革靴/ウール・レザー/黒・チャコール・濃紺、CASUAL=デニム/パーカー/スニーカー/コットン・スウェット/白・明色。比率を体感できるインタラクティブなスクラブプレート付き
+- 03 The Four Tones: 黒=主役、チャコール=品、グレー=抜け、白=余白——4つのトーンの“配役”と生地の相関
+- 04 Contrast by Texture: 素材にもドレス/カジュアルの座標がある（レザー9・サテン/シルク9・ウール8・デニム4・ナイロン3・コットン3・スウェット0）。艶は揃えて一点だけズラす
+- 05 The Art of Negative Space: 抜け感=髪（センターパート+目尻のほつれ）・首元（ボタン1つ開け）・腕（肘下の無造作な腕まくり）。清潔感とキレイめの土台の上でだけ“大人の色気”になる
+- 06 Eight to Two: 社会性8:自我2が“大人の黄金比”。シーンに馴染むことを最優先に、スニーカー/アクセサリー/メガネ/帽子/髪型で2割だけ自分を通す
+- 07 Lookbook: 理論を一着に落とした4ルックの実例集
+
+## 制作者
+
+- Shota Tanno — Direction / Copy / Design / Development / AI Imagery
+- Instagram: https://www.instagram.com/fuk_yuuki69783/
+- Mail: pannya6978@gmail.com
+- Other Works: CLAD. https://clad-studio.vercel.app/
+
+## サイト
+
+- 公式サイト: https://monochrome-one-xi.vercel.app/

@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
-const SITE_URL = "https://monochrome-one-xi.vercel.app"; // 独自ドメイン取得時はここを差し替え
+export const SITE_URL = "https://monochrome-one-xi.vercel.app"; // 独自ドメイン取得時はここを差し替え
 const SITE_NAME = "MONOCHROME";
 const TITLE = "MONOCHROME ｜ モノトーンコーデはセンスではなくロジック";
 const DESCRIPTION =
@@ -49,13 +49,52 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
+// @graph 形式で WebSite / Article / Person を @id 相互リンク（実態にないノードは入れない）
+const WEBSITE_ID = `${SITE_URL}/#website`;
+const PERSON_ID = `${SITE_URL}/#creator`;
+
 export const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Article",
-  headline: TITLE,
-  description: DESCRIPTION,
-  author: { "@type": "Person", name: "Shota Tanno" },
-  publisher: { "@type": "Organization", name: SITE_NAME },
-  inLanguage: "ja-JP",
-  mainEntityOfPage: SITE_URL,
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      name: SITE_NAME,
+      url: SITE_URL,
+      inLanguage: "ja",
+      author: { "@id": PERSON_ID },
+    },
+    {
+      "@type": "Article",
+      "@id": `${SITE_URL}/#article`,
+      headline: TITLE,
+      description: DESCRIPTION,
+      image: `${SITE_URL}/images/gallery-poster.jpg`,
+      author: { "@id": PERSON_ID },
+      publisher: { "@id": PERSON_ID },
+      inLanguage: "ja-JP",
+      mainEntityOfPage: { "@id": WEBSITE_ID },
+      about: [
+        "モノトーンコーデ",
+        "メンズファッション理論",
+        "ドレス7:カジュアル3の黄金比",
+        "トーンの配役",
+        "素材の座標",
+        "抜け感",
+        "社会性8:自我2",
+      ],
+    },
+    {
+      "@type": "Person",
+      "@id": PERSON_ID,
+      name: "Shota Tanno",
+      url: SITE_URL,
+      jobTitle: "Direction / Copy / Design / Development / AI Imagery",
+      sameAs: [
+        "https://www.instagram.com/fuk_yuuki69783/",
+        "https://clad-studio.vercel.app/",
+      ],
+      email: "mailto:pannya6978@gmail.com",
+    },
+  ],
 };

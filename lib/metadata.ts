@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 
-const SITE_URL = "https://monochrome.example.com"; // TODO: 本番ドメイン確定時に差し替え
+const SITE_URL = "https://monochrome-one-xi.vercel.app"; // 独自ドメイン取得時はここを差し替え
 const SITE_NAME = "MONOCHROME";
 const TITLE = "MONOCHROME ｜ モノトーンコーデはセンスではなくロジック";
 const DESCRIPTION =
@@ -19,7 +19,7 @@ export const siteMetadata: Metadata = {
     "ファッション ロジック",
     "大人 モノトーン",
   ],
-  authors: [{ name: SITE_NAME }],
+  authors: [{ name: "Shota Tanno" }],
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
@@ -27,11 +27,15 @@ export const siteMetadata: Metadata = {
     siteName: SITE_NAME,
     locale: "ja_JP",
     type: "article",
+    images: [
+      { url: "/images/gallery-poster.jpg", width: 1280, height: 720, alt: TITLE },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: TITLE,
     description: DESCRIPTION,
+    images: ["/images/gallery-poster.jpg"],
   },
   robots: { index: true, follow: true },
   alternates: { canonical: SITE_URL },
@@ -50,7 +54,7 @@ export const structuredData = {
   "@type": "Article",
   headline: TITLE,
   description: DESCRIPTION,
-  author: { "@type": "Organization", name: SITE_NAME },
+  author: { "@type": "Person", name: "Shota Tanno" },
   publisher: { "@type": "Organization", name: SITE_NAME },
   inLanguage: "ja-JP",
   mainEntityOfPage: SITE_URL,

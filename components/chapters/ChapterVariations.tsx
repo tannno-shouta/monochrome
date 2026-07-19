@@ -33,7 +33,7 @@ const cards = [
   },
   {
     src: "/images/var-6.jpg",
-    label: "TONAL KNIT",
+    label: "RELAXY KNIT",
     ja: "グレーニットの都会的な印象を、黒のパンツで締める。大人の余裕を感じさせるモノトーンコーデ。",
   },
 ];

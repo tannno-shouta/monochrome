@@ -24,7 +24,17 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* スクロールアンカリング無効化: ピン留めセクションとの競合による位置ジャンプ防止 */
+  overflow-anchor: none;
+}
+
+/* smooth はマウス環境のみ（アンカージャンプ用）。
+   タッチ端末で有効だと、慣性スクロールの切り返し時に
+   スムーススクロールエンジンと競合して位置が飛ぶ（iOS Safari） */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

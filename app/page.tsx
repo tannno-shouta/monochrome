@@ -1,4 +1,5 @@
 import { ProgressRail } from "@/components/layout/ProgressRail";
+import { ScrollDebugHUD } from "@/components/dev/ScrollDebugHUD";
 import { Footer } from "@/components/layout/Footer";
 import { IntroPortal3D } from "@/components/intro/IntroPortal3D";
 import { SilhouettePrologue } from "@/components/chapters/SilhouettePrologue";
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <ProgressRail />
+      <ScrollDebugHUD />
       <main>
         <IntroPortal3D />
         <SilhouettePrologue />

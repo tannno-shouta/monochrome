@@ -3,15 +3,26 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * ★一時診断用 HUD（URL に ?debug=scroll が付いた時だけ表示）
- * SP のスクロール切り返しジャンプの原因切り分け:
- * - scrollY が連続 + winH が変化 → ツールバー起因の viewport 変化（絵の側のジャンプ）
- * - scrollY 自体が1フレームで大きく飛ぶ → 実スクロール位置のジャンプ
- * 原因特定後に削除する。
+ * ★一時診断用 HUD v2（URL に ?debug=scroll が付いた時だけ表示）
+ * ジャンプ瞬間のスナップショットを記録:
+ * - scrollY 前後 / winH（ツールバー出入り）前後 / pageH（文書全体の高さ）前後
+ * → どれが同時に変わったかで原因を確定する。原因特定後に削除。
  */
+
+type JumpLog = {
+  y: string;
+  winH: string;
+  pageH: string;
+};
+
 export function ScrollDebugHUD() {
   const [on, setOn] = useState(false);
-  const [disp, setDisp] = useState({ y: 0, winH: 0, jump: 0, hChange: 0 });
+  const [disp, setDisp] = useState<{ y: number; winH: number; hChange: number; logs: JumpLog[] }>({
+    y: 0,
+    winH: 0,
+    hChange: 0,
+    logs: [],
+  });
   const raf = useRef(0);
 
   useEffect(() => {
@@ -19,25 +30,33 @@ export function ScrollDebugHUD() {
     setOn(true);
     let lastY = window.scrollY;
     let lastH = window.innerHeight;
+    let lastPageH = document.documentElement.scrollHeight;
     let lastT = performance.now();
-    let maxJump = 0;
     let hChanges = 0;
+    const logs: JumpLog[] = [];
     let lastPaint = 0;
     const loop = () => {
       const y = window.scrollY;
       const h = window.innerHeight;
+      const pageH = document.documentElement.scrollHeight;
       const now = performance.now();
-      // 1フレーム（<40ms）で 120px 超の移動 = 実スクロールのジャンプとして記録
+      // 1フレーム（<40ms）で 120px 超のスクロール移動 = ジャンプとして前後値を記録
       if (Math.abs(y - lastY) > 120 && now - lastT < 40) {
-        maxJump = Math.max(maxJump, Math.round(Math.abs(y - lastY)));
+        logs.unshift({
+          y: `${Math.round(lastY)}→${Math.round(y)} (${Math.round(y - lastY)}px)`,
+          winH: h !== lastH ? `${lastH}→${h}` : `${h}（不変）`,
+          pageH: pageH !== lastPageH ? `${lastPageH}→${pageH}` : `不変`,
+        });
+        if (logs.length > 3) logs.pop();
       }
-      if (h !== lastH) hChanges += 1; // ツールバー出入り等で viewport 高さが変わった回数
+      if (h !== lastH) hChanges += 1;
       lastY = y;
       lastH = h;
+      lastPageH = pageH;
       lastT = now;
-      if (now - lastPaint > 120) {
+      if (now - lastPaint > 150) {
         lastPaint = now;
-        setDisp({ y: Math.round(y), winH: h, jump: maxJump, hChange: hChanges });
+        setDisp({ y: Math.round(y), winH: h, hChange: hChanges, logs: [...logs] });
       }
       raf.current = requestAnimationFrame(loop);
     };
@@ -53,19 +72,30 @@ export function ScrollDebugHUD() {
         left: 8,
         bottom: 8,
         zIndex: 9999,
-        background: "rgba(0,0,0,0.8)",
+        background: "rgba(0,0,0,0.82)",
         color: "#fff",
         fontFamily: "monospace",
-        fontSize: 11,
+        fontSize: 10,
         lineHeight: 1.5,
         padding: "6px 10px",
         borderRadius: 4,
         pointerEvents: "none",
+        maxWidth: "88vw",
       }}
     >
-      <div>scrollY: {disp.y}</div>
-      <div>winH: {disp.winH}（変化 {disp.hChange} 回）</div>
-      <div>最大ジャンプ: {disp.jump}px</div>
+      <div>
+        scrollY: {disp.y} / winH: {disp.winH}（変化{disp.hChange}回）
+      </div>
+      {disp.logs.length === 0 ? (
+        <div>ジャンプ記録: なし</div>
+      ) : (
+        disp.logs.map((l, i) => (
+          <div key={i} style={{ borderTop: "1px solid #444", marginTop: 3, paddingTop: 3 }}>
+            <div>Y: {l.y}</div>
+            <div>winH: {l.winH} / pageH: {l.pageH}</div>
+          </div>
+        ))
+      )}
     </div>
   );
 }

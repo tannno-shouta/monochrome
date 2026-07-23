@@ -17,17 +17,24 @@ type JumpLog = {
 
 export function ScrollDebugHUD() {
   const [on, setOn] = useState(false);
-  const [disp, setDisp] = useState<{ y: number; winH: number; hChange: number; logs: JumpLog[] }>({
+  const [disp, setDisp] = useState<{
+    y: number;
+    winH: number;
+    hChange: number;
+    fixes: number;
+    logs: JumpLog[];
+  }>({
     y: 0,
     winH: 0,
     hChange: 0,
+    fixes: 0,
     logs: [],
   });
   const raf = useRef(0);
 
   useEffect(() => {
     if (!new URLSearchParams(window.location.search).has("debug")) return;
-    setOn(true);
+    const showTimer = setTimeout(() => setOn(true), 0);
     let lastY = window.scrollY;
     let lastH = window.innerHeight;
     let lastPageH = document.documentElement.scrollHeight;
@@ -56,12 +63,21 @@ export function ScrollDebugHUD() {
       lastT = now;
       if (now - lastPaint > 150) {
         lastPaint = now;
-        setDisp({ y: Math.round(y), winH: h, hChange: hChanges, logs: [...logs] });
+        setDisp({
+          y: Math.round(y),
+          winH: h,
+          hChange: hChanges,
+          fixes: (window as unknown as { __scrollGuardFixes?: number }).__scrollGuardFixes ?? 0,
+          logs: [...logs],
+        });
       }
       raf.current = requestAnimationFrame(loop);
     };
     raf.current = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf.current);
+    return () => {
+      clearTimeout(showTimer);
+      cancelAnimationFrame(raf.current);
+    };
   }, []);
 
   if (!on) return null;
@@ -84,7 +100,7 @@ export function ScrollDebugHUD() {
       }}
     >
       <div>
-        scrollY: {disp.y} / winH: {disp.winH}（変化{disp.hChange}回）
+        scrollY: {disp.y} / winH: {disp.winH}（変化{disp.hChange}回）/ 補正: {disp.fixes}回
       </div>
       {disp.logs.length === 0 ? (
         <div>ジャンプ記録: なし</div>

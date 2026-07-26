@@ -22,12 +22,14 @@ export function ScrollDebugHUD() {
     winH: number;
     hChange: number;
     fixes: number;
+    guardVer: number;
     logs: JumpLog[];
   }>({
     y: 0,
     winH: 0,
     hChange: 0,
     fixes: 0,
+    guardVer: 0,
     logs: [],
   });
   const raf = useRef(0);
@@ -63,11 +65,16 @@ export function ScrollDebugHUD() {
       lastT = now;
       if (now - lastPaint > 150) {
         lastPaint = now;
+        const w = window as unknown as {
+          __scrollGuardFixes?: number;
+          __scrollGuardVersion?: number;
+        };
         setDisp({
           y: Math.round(y),
           winH: h,
           hChange: hChanges,
-          fixes: (window as unknown as { __scrollGuardFixes?: number }).__scrollGuardFixes ?? 0,
+          fixes: w.__scrollGuardFixes ?? 0,
+          guardVer: w.__scrollGuardVersion ?? 0,
           logs: [...logs],
         });
       }
@@ -100,7 +107,8 @@ export function ScrollDebugHUD() {
       }}
     >
       <div>
-        scrollY: {disp.y} / winH: {disp.winH}（変化{disp.hChange}回）/ 補正: {disp.fixes}回
+        scrollY: {disp.y} / winH: {disp.winH}（変化{disp.hChange}回）/ 補正: {disp.fixes}回（v
+        {disp.guardVer}）
       </div>
       {disp.logs.length === 0 ? (
         <div>ジャンプ記録: なし</div>

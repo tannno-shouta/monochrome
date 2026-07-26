@@ -10,6 +10,8 @@ export const siteMetadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  // デプロイ検証用: 本番 HTML からどのコミットのビルドかを curl で確定できる
+  other: { "x-build": process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "dev" },
   keywords: [
     "モノトーンコーデ",
     "モノトーン メンズ",
